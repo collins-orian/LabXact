@@ -1,0 +1,85 @@
+<nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary">
+	<div class="container-fluid">
+		<a
+			class="navbar-brand"
+			style="
+				color: #273469;
+				background-color: #ffc107;
+				padding: 5px;
+				border-radius: 0.375rem;
+			"
+			href="{{ url_for('home')}}"
+			>LabXact</a
+		>
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent"
+			aria-expanded="false"
+			aria-label="Toggle navigation"
+		>
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a
+						class="nav-link active"
+						aria-current="page"
+						href="{{ url_for('dashboard')}}"
+						style="color: #273469"
+						>Dashboard</a
+					>
+				</li>
+
+				<li class="nav-item">
+					<a
+						class="nav-link active"
+						aria-current="page"
+						href="{{ url_for('add_user')}}"
+						style="color: #273469"
+						>Add User</a
+					>
+				</li>
+				<li class="nav-item">
+					<a
+						class="nav-link active"
+						aria-current="page"
+						href="{{ url_for('add_patient')}}"
+						style="color: #273469"
+						>Patient Registeration</a
+					>
+				</li>
+			</ul>
+			<form class="d-flex" role="search">
+				<input
+					class="form-control me-2"
+					type="search"
+					placeholder="Search"
+					aria-label="Search"
+				/>
+				<button
+					class="btn btn-outline-warning"
+					type="submit"
+					style="border: none; color: #273469"
+				>
+					Search
+				</button>
+			</form>
+			<a
+				href="{{url_for('logout')}}"
+				style="
+					color: #273469;
+					background-color: #ffc107;
+					padding: 7px;
+					border-radius: 0.375rem;
+					text-decoration: none;
+				"
+				>Logout</a
+			>
+		</div>
+	</div>
+</nav>
+

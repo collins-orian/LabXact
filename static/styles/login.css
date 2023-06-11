@@ -1,0 +1,81 @@
+body {
+	width: 100%;
+	background-color: #273469;
+	font-family: "Urbanist", sans-serif;
+}
+
+.row {
+	width: 100%;
+	margin: 0 auto;
+	height: 750px;
+}
+.row h1 {
+	font-size: 230px;
+	padding: 0;
+	margin: 0;
+	text-shadow: 0 2px 2px #ffc107;
+	text-align: center;
+	color: white;
+	font-weight: 900;
+}
+.row h3 {
+	text-align: center;
+	color: #ffc107;
+	font-weight: 900;
+	padding: 0;
+	margin: 0;
+}
+.login-form {
+	min-width: 300px;
+	max-width: 300px;
+	margin: 0 auto;
+	border-radius: 50px;
+	box-shadow: 0 2px 5px #ffc107;
+}
+
+.form_col {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 auto;
+	width: 40%;
+}
+
+.logo_col {
+	width: 60%;
+}
+
+#username,
+#password {
+	border: 2px solid #273469;
+}
+
+.login-form .btn {
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 30px;
+	border-radius: 1000px;
+}
+
+/* Responsive CSS using media queries */
+@media (max-width: 576px) {
+	.login-form {
+		margin-top: 50px;
+	}
+}
+
+@media (max-width: 400px) {
+	.login-form {
+		margin-top: 20px;
+		padding: 15px;
+	}
+	.login-form h2 {
+		font-size: 22px;
+		margin-bottom: 20px;
+	}
+	.login-form .form-control,
+	.login-form .btn {
+		min-height: 35px;
+		font-size: 14px;
+	}
+}

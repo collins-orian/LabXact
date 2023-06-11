@@ -1,0 +1,97 @@
+{% extends "base.html" %} {% block title%} LabXact {% endblock %} {% block
+content %} {% for message in get_flashed_messages() %}
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	{{ message }}
+	<button
+		type="button"
+		class="btn-close"
+		data-bs-dismiss="alert"
+		aria-label="Close"
+	></button>
+</div>
+
+{% endfor %} {% if name %}
+<h1>User List</h1>
+<br /><br />
+<table class="table table-hover table-bordered table-striped">
+	<tr>
+		<th>ID</th>
+		<th>FULLNAME</th>
+		<th>EMAIL</th>
+		<th>USERNAME</th>
+		<th>ROLE</th>
+		<th>SECTION</th>
+	</tr>
+	{% for users in our_users %}
+	<tr>
+		<td>{{users.id}}</td>
+		<td>{{users.fullname}}</td>
+		<td>{{users.email}}</td>
+		<td>
+			<a href="{{url_for('update', id=users.id)}}">{{users.username}}</a>
+		</td>
+		<td>{{users.role}}</td>
+		<td>{{users.section}}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
+<div class="row" style="width: 100%; align-items: center">
+	<div class="col-md-6" style="width: 40%">
+		<h1>Add User</h1>
+		<br />
+		<div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+			<form method="POST">
+				{{ form.hidden_tag() }} {{ form.fullname.label(class='form-label',
+				style="color: #273469") }} {{ form.fullname(class='form-control mb-3')
+				}} {{ form.username.label(class='form-label', style="color: #273469") }}
+				{{ form.username(class='form-control mb-3') }} {{
+				form.email.label(class='form-label', style="color: #273469") }} {{
+				form.email(class='form-control mb-3') }} {{
+				form.role.label(class='form-label' , style="color: #273469") }} {{
+				form.role(class='form-control mb-3 form-select') }} {{
+				form.section.label(class='form-label' , style="color: #273469") }} {{
+				form.section(class='form-control mb-3 form-select') }} {{
+				form.password.label(class='form-label', style="color: #273469") }} {{
+				form.password(class='form-control mb-3', placeholder="8-20 characters")
+				}} {{ form.password_confirm.label(class='form-label', style="color:
+				#273469") }} {{ form.password_confirm(class='form-control mb-3') }}
+
+				<br />
+				{{ form.submit(class='btn btn-warning', style="color: #273469; border:
+				none; background-color: #ffc107") }}
+			</form>
+			<br /><br /><br />
+		</div>
+	</div>
+	<div class="col-md-6" style="width: 60%">
+		<img
+			src="../static/images/add-user.svg"
+			style="width: 100%; margin: 0 auto"
+		/>
+	</div>
+</div>
+<table class="table table-hover table-bordered table-striped">
+	<h1>User List</h1>
+	<br />
+	<tr>
+		<th>ID</th>
+		<th>FULLNAME</th>
+		<th>EMAIL</th>
+		<th>USERNAME</th>
+		<th>ROLE</th>
+		<th>SECTION</th>
+	</tr>
+	{% for users in our_users %}
+	<tr>
+		<td>{{users.id}}</td>
+		<td>{{users.fullname}}</td>
+		<td>{{users.email}}</td>
+		<td><a href="{{url_for('update', id=users.id)}}">{{users.username}}</a></td>
+		<td>{{users.role}}</td>
+		<td>{{users.section}}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %} {% endblock %}

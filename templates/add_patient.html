@@ -1,0 +1,118 @@
+{% extends "base.html" %} {% block title%} LabXact {% endblock %} {% block
+content %} {% for message in get_flashed_messages() %}
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	{{ message }}
+	<button
+		type="button"
+		class="btn-close"
+		data-bs-dismiss="alert"
+		aria-label="Close"
+	></button>
+</div>
+
+{% endfor %} {% if name %}
+<h1>Registered Patients</h1>
+<br /><br />
+<table class="table table-hover table-bordered table-striped">
+	<tr>
+		<th>S/NO.</th>
+		<th>PID</th>
+		<th>FIRSTNAME</th>
+		<th>LASTNAME</th>
+		<th>SEX</th>
+		<th>DATE OF BIRTH</th>
+		<th>AGE</th>
+		<th>DATE REGISTERED</th>
+		<th>ACTION</th>
+	</tr>
+	{% for patient in all_patients %}
+	<tr>
+		<td>{{patient.id}}</td>
+		<td>{{patient.patient_id}}</td>
+		<td>{{patient.first_name}}</td>
+		<td>{{patient.last_name}}</td>
+		<td>{{patient.gender}}</td>
+		<td>{{patient.date_of_birth}}</td>
+		<td>{{patient.age}}</td>
+		<td>{{patient.date_registered}}</td>
+		<td>
+			<a href="#">Action</a>
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
+<div class="row" style="width: 100%">
+	<div class="col-md-6" style="width: 40%">
+		<h1>Register Patient</h1>
+		<br />
+		<div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+			<form method="POST">
+				{{ form.hidden_tag() }} {{ form.patient_id.label(class='form-label',
+				style="color: #273469") }} {{ form.patient_id(class='form-control mb-3',
+				value=pid)}} {{ form.firstname.label(class='form-label', style="color:
+				#273469") }} {{ form.firstname(class='form-control mb-3') }}
+				{{form.middlename.label(class='form-label', style="color: #273469") }}
+				{{form.middlename(class='form-control mb-3') }}
+				{{form.lastname.label(class='form-label' , style="color: #273469") }}
+				{{form.lastname(class='form-control mb-3') }}
+				{{form.dob.label(class='form-label', style="color: #273469") }}
+				{{form.dob(class='form-control mb-3') }}
+				{{form.age.label(class='form-label', style="color: #273469")}} {{
+				form.age(class='form-control mb-3') }}
+				{{form.gender.label(class='form-label', style="color: #273469")}} {{
+				form.gender(class='form-control mb-3 form-select') }}
+				{{form.email.label(class='form-label', style="color: #273469")}} {{
+				form.email(class='form-control mb-3') }}
+				{{form.mobile.label(class='form-label', style="color: #273469")}} {{
+				form.mobile(class='form-control mb-3') }}
+				{{form.address.label(class='form-label', style="color: #273469")}} {{
+				form.address(class='form-control mb-3') }}
+
+				<br />
+				{{ form.submit(class='btn btn-warning', style="color: #273469; border:
+				none; background-color: #ffc107") }}
+			</form>
+			<br /><br /><br />
+		</div>
+	</div>
+	<div class="col-md-6" style="width: 60%">
+		<img
+			src="../static/images/records.svg"
+			style="width: 100%; margin: 0 auto"
+		/>
+	</div>
+</div>
+<br />
+<table class="table table-hover table-bordered table-striped">
+	<h1>Registered Patients</h1>
+	<br />
+	<tr>
+		<th>S/NO.</th>
+		<th>PID</th>
+		<th>FIRSTNAME</th>
+		<th>LASTNAME</th>
+		<th>SEX</th>
+		<th>DATE OF BIRTH</th>
+		<th>AGE</th>
+		<th>DATE REGISTERED</th>
+		<th>ACTION</th>
+	</tr>
+	{% for patient in all_patients %}
+	<tr>
+		<td>{{patient.id}}</td>
+		<td>{{patient.patient_id}}</td>
+		<td>{{patient.first_name}}</td>
+		<td>{{patient.last_name}}</td>
+		<td>{{patient.gender}}</td>
+		<td>{{patient.date_of_birth}}</td>
+		<td>{{patient.age}}</td>
+		<td>{{patient.date_registered}}</td>
+		<td>
+			<a href="#">Action</a>
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %} {% endblock %}
