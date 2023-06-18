@@ -11,38 +11,8 @@ content %} {% for message in get_flashed_messages() %}
 	></button>
 </div>
 
-{% endfor %} {% if name %}
-<h1>Registered Patients</h1>
-<br /><br />
-<table class="table table-hover table-bordered table-striped">
-	<tr>
-		<th>S/NO.</th>
-		<th>PID</th>
-		<th>FIRSTNAME</th>
-		<th>LASTNAME</th>
-		<th>SEX</th>
-		<th>DATE OF BIRTH</th>
-		<th>AGE</th>
-		<th>DATE REGISTERED</th>
-		<th>ACTION</th>
-	</tr>
-	{% for patient in all_patients %}
-	<tr>
-		<td>{{patient.id}}</td>
-		<td>{{patient.patient_id}}</td>
-		<td>{{patient.first_name}}</td>
-		<td>{{patient.last_name}}</td>
-		<td>{{patient.gender}}</td>
-		<td>{{patient.date_of_birth}}</td>
-		<td>{{patient.age}}</td>
-		<td>{{patient.date_registered}}</td>
-		<td>
-			<a href="#">Action</a>
-		</td>
-	</tr>
-	{% endfor %}
-</table>
-{% else %}
+{% endfor %}
+
 <div class="row" style="width: 100%">
 	<div class="col-md-6" style="width: 40%">
 		<h1>Register Patient</h1>
@@ -103,16 +73,16 @@ content %} {% for message in get_flashed_messages() %}
 	<tr>
 		<td>{{patient.id}}</td>
 		<td>{{patient.patient_id}}</td>
-		<td>{{patient.first_name}}</td>
-		<td>{{patient.last_name}}</td>
+		<td>{{patient.firstname}}</td>
+		<td>{{patient.lastname}}</td>
 		<td>{{patient.gender}}</td>
 		<td>{{patient.date_of_birth}}</td>
 		<td>{{patient.age}}</td>
 		<td>{{patient.date_registered}}</td>
 		<td>
-			<a href="#">Action</a>
+			<a href="{{url_for('modify_patient', id=patient.id)}}">Edit</a>
 		</td>
 	</tr>
 	{% endfor %}
 </table>
-{% endif %} {% endblock %}
+{% endblock %}
