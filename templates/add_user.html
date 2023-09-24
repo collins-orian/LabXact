@@ -11,7 +11,32 @@ content %} {% for message in get_flashed_messages() %}
 	></button>
 </div>
 
-{% endfor %}
+{% endfor %} {% if name %}
+<h1>User List</h1>
+<br /><br />
+<table class="table table-hover table-bordered table-striped">
+	<tr>
+		<th>ID</th>
+		<th>FULLNAME</th>
+		<th>EMAIL</th>
+		<th>USERNAME</th>
+		<th>ROLE</th>
+		<th>SECTION</th>
+	</tr>
+	{% for users in our_users %}
+	<tr>
+		<td>{{users.id}}</td>
+		<td>{{users.fullname}}</td>
+		<td>{{users.email}}</td>
+		<td>
+			<a href="{{url_for('update', id=users.id)}}">{{users.username}}</a>
+		</td>
+		<td>{{users.role}}</td>
+		<td>{{users.section}}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
 <div class="row" style="width: 100%; align-items: center">
 	<div class="col-md-6" style="width: 40%">
 		<h1>Add User</h1>
@@ -57,20 +82,16 @@ content %} {% for message in get_flashed_messages() %}
 		<th>USERNAME</th>
 		<th>ROLE</th>
 		<th>SECTION</th>
-		<th>ACTION</th>
 	</tr>
 	{% for users in our_users %}
 	<tr>
 		<td>{{users.id}}</td>
 		<td>{{users.fullname}}</td>
 		<td>{{users.email}}</td>
-		<td>{{users.username}}</td>
+		<td><a href="{{url_for('update', id=users.id)}}">{{users.username}}</a></td>
 		<td>{{users.role}}</td>
 		<td>{{users.section}}</td>
-		<td>
-			<a href="{{url_for('modify_user', id=users.id)}}">Edit</a>
-		</td>
 	</tr>
 	{% endfor %}
 </table>
-{% endblock %}
+{% endif %} {% endblock %}

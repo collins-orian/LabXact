@@ -4,10 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, Float, String, Date, Enum, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
 from flask_migrate import Migrate
-from datetime import datetime
+from datetime import datetime, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from forms import LoginForm, UserForm, UserUpdateForm, PatientRegForm, PatientUpdateForm
+from forms import LoginForm, UserForm, UpdateUserForm, PatientRegForm
 
 app = Flask(__name__)
 
@@ -56,10 +56,8 @@ def add_patient():
     # Create a new table if it doesn't exist
     if not Patients.__table__.exists(db.engine):
         db.create_all()
-
     pid = None
     all_patients = Patients.query.order_by(Patients.date_registered)
-
     form = PatientRegForm()
 
     # Retrieve the total number of patients from the database
@@ -77,14 +75,8 @@ def add_patient():
             pid = Patients.query.filter_by(id=patient_id).first()
             if pid is None:
 
-                patient = Patients(patient_id=form.patient_id.data, 
-                                   firstname=form.firstname.data, 
-                                   middlename=form.middlename.data, 
-                                   lastname=form.lastname.data,
-                                   date_of_birth=form.dob.data, 
-                                   age=form.age.data, gender=form.gender.data, 
-                                   mobile=form.mobile.data, email=form.email.data, 
-                                   address=form.address.data)
+                patient = Patients(patient_id=form.patient_id.data, firstname=form.firstname.data, middlename=form.middlename.data, lastname=form.lastname.data,
+                                   date_of_birth=form.dob.data, age=form.age.data, gender=form.gender.data, mobile=form.mobile.data, email=form.email.data, address=form.address.data)
                 db.session.add(patient)
                 db.session.commit()
         except:
@@ -130,11 +122,9 @@ def modify_patient(id):
             return redirect(url_for("add_patient"))
         except:
             flash("Patient Details Update Failed!")
-            return render_template("modify_patient.html", form=form, 
-                                   patient_to_update=patient_to_update, id=id)
+            return render_template("modify_patient.html", form=form, patient_to_update=patient_to_update, id=id)
     else:
-        return render_template("modify_patient.html", form=form, 
-                               patient_to_update=patient_to_update, id=id)
+        return render_template("modify_patient.html", form=form, patient_to_update=patient_to_update, id=id)
 
 
 # delete patient from database
@@ -148,29 +138,28 @@ def delete_patient(id):
         db.session.delete(patient_to_delete)
         db.session.commit()
         flash("Patient Deleted Successfully")
-        return render_template('add_patient.html', form=form, 
-                               all_patients=all_patients)
+        return render_template('add_patient.html', form=form, all_patients=all_patients)
+
     except:
         flash("Patient Delete Failed!")
         return redirect(url_for('add_patient'))
 
 
 # delete user from database
-@app.route('/delete_user/<int:id>', methods=['GET', 'POST'])
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_user(id):
+def delete(id):
+    username = None
     form = UserForm()
-    user_to_delete = Users.query.get_or_404(id)
+    delete_user = Users.query.get_or_404(id)
     try:
-        db.session.delete(user_to_delete)
+        db.session.delete(delete_user)
         db.session.commit()
         flash("User Deleted Successfully")
         all_users = Users.query.order_by(Users.date_added)
-        return render_template('add_user.html', form=form, 
-                               our_users=all_users)
+        return render_template('add_user.html', form=form, our_users=all_users)
     except:
         flash("User Delete Failed!")
-        return redirect(url_for('add_user'))
 
 
 
@@ -181,7 +170,7 @@ def add_user():
     # Create a new table if it doesn't exist
     if not Users.__table__.exists(db.engine):
         db.create_all()
-
+    username = None
     all_users = Users.query.order_by(Users.date_added)
     form = UserForm()
     if form.validate_on_submit():
@@ -194,6 +183,7 @@ def add_user():
                          section=form.section.data, password_hash=hashed_pwd)
             db.session.add(user)
             db.session.commit()
+        username = form.username.data
         form.username.data = ''
         form.fullname.data = ''
         form.email.data = ''
@@ -203,33 +193,31 @@ def add_user():
         form.password_confirm.data = ''
         flash("User Added Successfully")
         return redirect(url_for("add_user"))
-    return render_template('add_user.html', form=form, our_users=all_users)
+    return render_template('add_user.html', form=form, name=username, our_users=all_users)
 
 
 # update user information
-@app.route('/modify_user/<int:id>', methods=['GET', 'POST'])
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required
-def modify_user(id):
-    form = UserUpdateForm()
-    user_to_update = Users.query.get_or_404(id)
+def update(id):
+    form = UpdateUserForm()
+    name_to_update = Users.query.get_or_404(id)
     if request.method == "POST":
-        user_to_update.fullname = request.form.get('fullname')
-        user_to_update.username = request.form.get('username')
-        user_to_update.email = request.form.get('email')
-        user_to_update.role = request.form.get('role')
-        user_to_update.section = request.form.get('section')
-        user_to_update.password = request.form.get('password')
+        name_to_update.fullname = request.form.get('fullname')
+        name_to_update.username = request.form.get('username')
+        name_to_update.email = request.form.get('email')
+        name_to_update.role = request.form.get('role')
+        name_to_update.section = request.form.get('section')
+        name_to_update.password = request.form.get('password')
         try:
             db.session.commit()
             flash("User Details Updated Successfully!")
             return redirect(url_for("add_user"))
         except:
             flash("User Details Update Failed!")
-            return render_template("modify_user.html", form=form, 
-                                   user_to_update=user_to_update, id=id)
+            return render_template("modify_user.html", form=form, user_to_update=user_to_update, id=id)
     else:
-        return render_template("modify_user.html", form=form, 
-                               user_to_update=user_to_update, id=id)
+        return render_template("modify_user.html", form=form, user_to_update=user_to_update, id=id)
 
 
 # Login page
@@ -259,8 +247,9 @@ def logout():
     flash("Logout Successful!")
     return redirect(url_for('login'))
 
-
 # Invalid URL
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
@@ -278,9 +267,9 @@ class Patients(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     patient_id = Column(String(100), unique=True, nullable=False)
-    firstname = Column(String(50), nullable=False)
-    middlename = Column(String(50))
-    lastname = Column(String(50), nullable=False)
+    first_name = Column(String(50), nullable=False)
+    middle_name = Column(String(50))
+    last_name = Column(String(50), nullable=False)
     date_of_birth = Column(Date, nullable=False)
     age = Column(Integer, nullable=False)
     gender = Column(Enum('Male', 'Female', 'other'), nullable=False)
