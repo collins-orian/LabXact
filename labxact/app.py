@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
-"""
-Main app.py file that contains the configuration
-for the application itself"""
 
+# ----------------------------------------------------------------
 """All reqired imports """
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, Float, String, Date, Enum, ForeignKey, DateTime, Text
+from sqlalchemy import Column, Integer, String, Date, Enum, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from flask_migrate import Migrate
 from datetime import datetime
@@ -16,6 +14,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from forms import LoginForm, UserForm, UserUpdateForm, PatientRegForm, PatientUpdateForm
 
 
+# ----------------------------------------------------------------
 """This is the main application entry point and the application
 secret key"""
 
@@ -23,16 +22,20 @@ app = Flask(__name__)
 app.secret_key = "devops/ITS2022@."
 
 
+# ----------------------------------------------------------------
 '''SQLalchemy Configurations and as well database creation'''
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:devops/ITS2022@localhost:3306/labxact"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 db = SQLAlchemy(app)
 
 
+# ----------------------------------------------------------------
 '''Handles the database migration'''
 migrate = Migrate(app, db)
 
 
+# ----------------------------------------------------------------
 """
 This handles the login features and session management for the application
 """
@@ -48,10 +51,11 @@ def load_user(user_id):
     return Users.query.get(int(user_id))
 
 
-
+# ----------------------------------------------------------------
 """
 These are the routes that are present in the application
 """
+
 
 # home page
 @app.route('/')
@@ -89,14 +93,8 @@ def add_patient():
             pid = Patients.query.filter_by(id=patient_id).first()
             if pid is None:
 
-                patient = Patients(patient_id=form.patient_id.data, 
-                                   firstname=form.firstname.data, 
-                                   middlename=form.middlename.data, 
-                                   lastname=form.lastname.data,
-                                   date_of_birth=form.dob.data, 
-                                   age=form.age.data, gender=form.gender.data, 
-                                   mobile=form.mobile.data, email=form.email.data, 
-                                   address=form.address.data)
+                patient = Patients(patient_id=form.patient_id.data, firstname=form.firstname.data, middlename=form.middlename.data, lastname=form.lastname.data,
+                                   date_of_birth=form.dob.data, age=form.age.data, gender=form.gender.data, mobile=form.mobile.data, email=form.email.data, address=form.address.data)
                 db.session.add(patient)
                 db.session.commit()
         except:
@@ -114,11 +112,9 @@ def add_patient():
         form.mobile.data = ''
         form.address.data = ''
         flash("Patient Registered Successfully")
-
         # Calculate the age based on the date of birth
         return redirect(url_for("add_patient"))
-    return render_template('add_patient.html', form=form, pid=patient_id, 
-                           all_patients=all_patients, current_user=current_user)
+    return render_template('add_patient.html', form=form, pid=patient_id, all_patients=all_patients, current_user=current_user)
 
 
 # update patient information
@@ -143,11 +139,9 @@ def modify_patient(id):
             return redirect(url_for("add_patient"))
         except:
             flash("Patient Details Update Failed!")
-            return render_template("modify_patient.html", form=form, 
-                                   patient_to_update=patient_to_update, id=id)
+            return render_template("modify_patient.html", form=form, patient_to_update=patient_to_update, id=id)
     else:
-        return render_template("modify_patient.html", form=form, 
-                               patient_to_update=patient_to_update, id=id)
+        return render_template("modify_patient.html", form=form, patient_to_update=patient_to_update, id=id)
 
 
 # delete patient from database
@@ -161,8 +155,8 @@ def delete_patient(id):
         db.session.delete(patient_to_delete)
         db.session.commit()
         flash("Patient Deleted Successfully")
-        return render_template('add_patient.html', form=form, 
-                               all_patients=all_patients)
+        return render_template('add_patient.html', form=form, all_patients=all_patients)
+
     except:
         flash("Patient Delete Failed!")
         return redirect(url_for('add_patient'))
@@ -179,12 +173,10 @@ def delete_user(id):
         db.session.commit()
         flash("User Deleted Successfully")
         all_users = Users.query.order_by(Users.date_added)
-        return render_template('add_user.html', form=form, 
-                               our_users=all_users)
+        return render_template('add_user.html', form=form, our_users=all_users)
     except:
         flash("User Delete Failed!")
         return redirect(url_for('add_user'))
-
 
 
 # add user to database
@@ -203,8 +195,7 @@ def add_user():
         if user_email is None and user_username is None:
             hashed_pwd = generate_password_hash(form.password.data, "sha256")
             user = Users(fullname=form.fullname.data, username=form.username.data,
-                         email=form.email.data, role=form.role.data, 
-                         section=form.section.data, password_hash=hashed_pwd)
+                         email=form.email.data, role=form.role.data, section=form.section.data, password_hash=hashed_pwd)
             db.session.add(user)
             db.session.commit()
         form.username.data = ''
@@ -238,11 +229,9 @@ def modify_user(id):
             return redirect(url_for("add_user"))
         except:
             flash("User Details Update Failed!")
-            return render_template("modify_user.html", form=form, 
-                                   user_to_update=user_to_update, id=id)
+            return render_template("modify_user.html", form=form, user_to_update=user_to_update, id=id)
     else:
-        return render_template("modify_user.html", form=form, 
-                               user_to_update=user_to_update, id=id)
+        return render_template("modify_user.html", form=form, user_to_update=user_to_update, id=id)
 
 
 # Login page
@@ -285,11 +274,12 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
-
+# ----------------------------------------------------------------
 """
 The models below create database tables for the application and 
 ensures that the database tables are created in the correct order
 """
+
 
 # User Model
 class Users(db.Model, UserMixin):
@@ -324,7 +314,7 @@ class Patients(db.Model):
     __tablename__ = 'patients'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    patient_id = Column(String(255), unique=True, nullable=False)
+    patient_id = Column(String(100), unique=True, nullable=False)
     firstname = Column(String(50), nullable=False)
     middlename = Column(String(50))
     lastname = Column(String(50), nullable=False)
@@ -336,8 +326,28 @@ class Patients(db.Model):
     address = Column(String(150), nullable=False)
     date_registered = Column(
         DateTime, default=datetime.now(), nullable=False)
-    
-    patient_sample = relationship('Samples', back_populates="patients")
+
+    test_id = Column(Integer, ForeignKey('tests.id'))
+
+    test = relationship("Tests")
+
+
+# Sections model
+class Sections(db.Model):
+    __tablename__ = 'sections'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    Section_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+
+
+# Inventory model
+class Inventory(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    inventory_id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    quantity = Column(Integer, primary_key=True)
+
 
 # Test model
 class Tests(db.Model):
@@ -345,68 +355,38 @@ class Tests(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
-    price = Column(Float, nullable=False)
-    section = Column(Integer, ForeignKey("sections.id"))
-
-    # Relationship to the Section table
-    section = relationship('Sections', back_populates='tests')
-
-    # Relationship to the Sample table
-    samples = relationship("Samples", back_populates="test")
 
 
-# Samples Model
 class Samples(db.Model):
     id = Column(Integer, primary_key=True)
     sample_id = Column(Integer, primary_key=True)
-    type = Column(String(50), nullable=False)
-    patient_id = Column(Integer, ForeignKey('patients.id'))
-    test_id = Column(Integer, ForeignKey('tests.id'))
-    date_registered = Column(
-        DateTime, default=datetime.now(), nullable=False)
-    status = Column(String(25), nullable=False)
 
-    # Relationship to the Test table
-    test = relationship('Test', back_populates='samples')
-    
+"""
+Samples:
 
-# Sections model
-class Sections(db.Model):
-    __tablename__ = 'sections'
+    Sample ID (primary key)
+    Patient ID (foreign key)
+    Test ID (foreign key)
+    Collection Date
+    Status
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False)
-    
-    # Relationship to the Users table
-    users = relationship('Users', back_populates='sections')
+Reports:
 
-    # Relationship to the Tests table
-    tests = relationship('Tests', back_populates='section')
+    Report ID (primary key)
+    Sample ID (foreign key)
+    Test ID (foreign key)
+    Result
+    Date Generated
 
+Patients:
 
-# Inventory model
-class Inventory(db.Model):
-    __tablename__ = 'inventory'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False)
-    quantity = Column(Integer, primary_key=True)
+    Patient ID (primary key)
+    Name
+    Date of Birth
+    Gender
 
 
-# Report model
-class Reports(db.Model):
-    __tablename__ = 'reports'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    sample_id = Column(Integer, ForeignKey("samples.id"))
-    test_id = Column(Integer, ForeignKey("tests.id"))
-    result = Column(String(255))
-
-    # Relationship to the Sample table
-    sample = relationship('Samples', back_populates='test_results')
-
-    # Relationship to the Test table
-    test = relationship('Tests', back_populates='test_results')
+"""
 
 
 if __name__ == '__main__':
