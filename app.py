@@ -7,12 +7,7 @@ from flask_migrate import Migrate
 from datetime import datetime, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from forms import LoginForm, UserForm, UserUpdateForm, PatientRegForm, PatientUpdateForm
-
-
-# ----------------------------------------------------------------
-"""This is the main application entry point and the application
-secret key"""
+from forms import LoginForm, UserForm, UpdateUserForm, PatientRegForm
 
 app = Flask(__name__)
 
@@ -266,14 +261,37 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
-# ----------------------------------------------------------------
-"""
-The models below create database tables for the application and 
-ensures that the database tables are created in the correct order
-"""
+# Define the Patient model
+class Patients(db.Model):
+    __tablename__ = 'patients'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    patient_id = Column(String(100), unique=True, nullable=False)
+    first_name = Column(String(50), nullable=False)
+    middle_name = Column(String(50))
+    last_name = Column(String(50), nullable=False)
+    date_of_birth = Column(Date, nullable=False)
+    age = Column(Integer, nullable=False)
+    gender = Column(Enum('Male', 'Female', 'other'), nullable=False)
+    mobile = Column(String(20), nullable=False)
+    email = Column(String(60))
+    address = Column(String(150), nullable=False)
+    date_registered = Column(
+        DateTime, default=datetime.now(), nullable=False)
+
+    # laboratory_id = Column(Integer, ForeignKey('laboratory.id'))
+
+    # laboratory = relationship("Laboratory")
 
 
-# User Model
+# # Create the Laboratory model
+# class Laboratory(db.Model):
+#     __tablename__ = 'laboratory'
+
+#     id = Column(Integer, primary_key=True)
+#     name = Column(String(50), nullable=False)
+
+# Create User Model
 class Users(db.Model, UserMixin):
     __tablename__ = 'users'
 

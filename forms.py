@@ -58,24 +58,3 @@ class PatientRegForm(FlaskForm):
     mobile = StringField("Mobile", validators=[data_required()])
     address = StringField("Address", validators=[data_required()])
     submit = SubmitField("Register")
-<<<<<<< HEAD:forms.py
-=======
-
-
-# patient update form
-class PatientUpdateForm(FlaskForm):
-    patient_id = StringField("Patient ID Number (PID)",
-                             validators=[data_required()])
-    firstname = StringField("Firstname", validators=[data_required()])
-    middlename = StringField("Middlename")
-    lastname = StringField("Lastname", validators=[data_required()])
-    dob = DateField("Date Of Birth", validators=[
-                    data_required()], format='%Y-%m-%d')
-    age = StringField("Age", validators=[data_required()])
-    gender = SelectField("Gender", validators=[data_required()], choices=[
-                         ('Male', 'Male'), ('Female', 'Female'), ('Others', 'Others')])
-    email = StringField("Email")
-    mobile = StringField("Mobile", validators=[data_required()])
-    address = StringField("Address", validators=[data_required()])
-    submit = SubmitField("Update Patient")
->>>>>>> parent of 6d538d3 (Code restructure):labxact/forms.py
