@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, SelectField, DateField, IntegerField
+from wtforms import StringField, SubmitField, PasswordField, SelectField, DateField
 from wtforms.validators import data_required, equal_to
 
 
@@ -51,7 +51,7 @@ class PatientRegForm(FlaskForm):
     lastname = StringField("Lastname", validators=[data_required()])
     dob = DateField("Date Of Birth", validators=[
                     data_required()], format='%Y-%m-%d')
-    age = IntegerField("Age", validators=[data_required()])
+    age = StringField("Age", validators=[data_required()])
     gender = SelectField("Gender", validators=[data_required()], choices=[
                          ('Male', 'Male'), ('Female', 'Female'), ('Others', 'Others')])
     email = StringField("Email")
@@ -69,7 +69,7 @@ class PatientUpdateForm(FlaskForm):
     lastname = StringField("Lastname", validators=[data_required()])
     dob = DateField("Date Of Birth", validators=[
                     data_required()], format='%Y-%m-%d')
-    age = IntegerField("Age", validators=[data_required()])
+    age = StringField("Age", validators=[data_required()])
     gender = SelectField("Gender", validators=[data_required()], choices=[
                          ('Male', 'Male'), ('Female', 'Female'), ('Others', 'Others')])
     email = StringField("Email")

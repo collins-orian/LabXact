@@ -11,9 +11,9 @@ content %} {% for message in get_flashed_messages() %}
 	></button>
 </div>
 
-{% endfor %} {% if current_user.role == 'admin' %}
+{% endfor %}
 <div class="row" style="width: 100%; align-items: center">
-	<div class="col-md-6" style="width: 50%">
+	<div class="col-md-6" style="width: 40%">
 		<h1>Add User</h1>
 		<br />
 		<div class="shadow p-3 mb-5 bg-body-tertiary rounded">
@@ -40,7 +40,7 @@ content %} {% for message in get_flashed_messages() %}
 			<br /><br /><br />
 		</div>
 	</div>
-	<div class="col-md-6" style="width: 50%">
+	<div class="col-md-6" style="width: 60%">
 		<img
 			src="../static/images/add-user.svg"
 			style="width: 100%; margin: 0 auto"
@@ -73,15 +73,4 @@ content %} {% for message in get_flashed_messages() %}
 	</tr>
 	{% endfor %}
 </table>
-
-{% else %}
-
-<br><br>
-<center>
-	<h1>Unauthorised Access!</h1>
-	<h5>Sorry, you are not allowed to access this page...</h5>
-</center>
-
-{% endif %}
-
 {% endblock %}

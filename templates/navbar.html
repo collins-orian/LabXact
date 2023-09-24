@@ -33,7 +33,7 @@
 						>Dashboard</a
 					>
 				</li>
-				{% if current_user.role == 'admin' %}
+
 				<li class="nav-item">
 					<a
 						class="nav-link active"
@@ -43,7 +43,6 @@
 						>Add User</a
 					>
 				</li>
-				{% endif %} {% if current_user.section == 'Reception' %}
 				<li class="nav-item">
 					<a
 						class="nav-link active"
@@ -53,7 +52,6 @@
 						>Patient Registeration</a
 					>
 				</li>
-				{% endif %}
 			</ul>
 			<form class="d-flex" role="search">
 				<input
@@ -70,21 +68,13 @@
 					Search
 				</button>
 			</form>
-			{% if current_user.is_authenticated %}
+
 			<button
 				class="btn btn-outline-warning"
 				style="border: none; color: #273469"
 			>
 				<a href="{{url_for('logout')}}" style="text-decoration: none">Logout</a>
 			</button>
-			{% else %}
-			<button
-				class="btn btn-outline-warning"
-				style="border: none; color: #273469"
-			>
-				<a href="{{url_for('login')}}" style="text-decoration: none">Login</a>
-			</button>
-			{% endif %}
 		</div>
 	</div>
 </nav>
