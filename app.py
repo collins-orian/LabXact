@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+
+# ----------------------------------------------------------------
+"""All reqired imports """
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, Float, String, Date, Enum, ForeignKey, DateTime, Text
@@ -9,6 +13,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from forms import LoginForm, UserForm, UserUpdateForm, PatientRegForm, PatientUpdateForm
 
+
+# ----------------------------------------------------------------
+"""This is the main application entry point and the application
+secret key"""
+
 app = Flask(__name__)
 
 
@@ -16,15 +25,22 @@ app = Flask(__name__)
 app.secret_key = "devops/ITS2022@."
 
 
-# SQLalchemy Configurations...
+# ----------------------------------------------------------------
+'''SQLalchemy Configurations and as well database creation'''
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:devops/ITS2022@localhost:3306/labxact"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
-# Handles database migration
+# ----------------------------------------------------------------
+'''Handles the database migration'''
 migrate = Migrate(app, db)
 
+
+# ----------------------------------------------------------------
+"""
+This handles the login features and session management for the application
+"""
 
 # Handling flask_login
 login_manager = LoginManager()
@@ -35,6 +51,14 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
+
+
+# ----------------------------------------------------------------
+"""
+These are the routes that are present in the application
+"""
+
+
 # home page
 
 
@@ -105,7 +129,7 @@ def add_patient():
 
         # Calculate the age based on the date of birth
         return redirect(url_for("add_patient"))
-    return render_template('add_patient.html', form=form, pid=patient_id, all_patients=all_patients)
+    return render_template('add_patient.html', form=form, pid=patient_id, all_patients=all_patients, current_user=current_user)
 
 
 # update patient information
@@ -272,37 +296,14 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
-# Define the Patient model
-class Patients(db.Model):
-    __tablename__ = 'patients'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    patient_id = Column(String(100), unique=True, nullable=False)
-    firstname = Column(String(50), nullable=False)
-    middlename = Column(String(50))
-    lastname = Column(String(50), nullable=False)
-    date_of_birth = Column(Date, nullable=False)
-    age = Column(Integer, nullable=False)
-    gender = Column(Enum('Male', 'Female', 'other'), nullable=False)
-    mobile = Column(String(20), nullable=False)
-    email = Column(String(60))
-    address = Column(String(150), nullable=False)
-    date_registered = Column(
-        DateTime, default=datetime.now(), nullable=False)
-
-    # laboratory_id = Column(Integer, ForeignKey('laboratory.id'))
-
-    # laboratory = relationship("Laboratory")
+# ----------------------------------------------------------------
+"""
+The models below create database tables for the application and 
+ensures that the database tables are created in the correct order
+"""
 
 
-# # Create the Laboratory model
-# class Laboratory(db.Model):
-#     __tablename__ = 'laboratory'
-
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String(50), nullable=False)
-
-# Create User Model
+# User Model
 class Users(db.Model, UserMixin):
     __tablename__ = 'users'
 
@@ -328,6 +329,86 @@ class Users(db.Model, UserMixin):
 
     def __repr__(self):
         return '<Name %r>' % self.fullname
+
+
+# Patient model
+class Patients(db.Model):
+    __tablename__ = 'patients'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    patient_id = Column(String(100), unique=True, nullable=False)
+    firstname = Column(String(50), nullable=False)
+    middlename = Column(String(50))
+    lastname = Column(String(50), nullable=False)
+    date_of_birth = Column(Date, nullable=False)
+    age = Column(Integer, nullable=False)
+    gender = Column(Enum('Male', 'Female', 'other'), nullable=False)
+    mobile = Column(String(20), nullable=False)
+    email = Column(String(60))
+    address = Column(String(150), nullable=False)
+    date_registered = Column(
+        DateTime, default=datetime.now(), nullable=False)
+
+    test_id = Column(Integer, ForeignKey('tests.id'))
+
+    test = relationship("Tests")
+
+
+# Sections model
+class Sections(db.Model):
+    __tablename__ = 'sections'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    Section_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+
+
+# Inventory model
+class Inventory(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    inventory_id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    quantity = Column(Integer, primary_key=True)
+
+
+# Test model
+class Tests(db.Model):
+    __tablename__ = 'tests'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+
+
+class Samples(db.Model):
+    id = Column(Integer, primary_key=True)
+    sample_id = Column(Integer, primary_key=True)
+
+"""
+Samples:
+
+    Sample ID (primary key)
+    Patient ID (foreign key)
+    Test ID (foreign key)
+    Collection Date
+    Status
+
+Reports:
+
+    Report ID (primary key)
+    Sample ID (foreign key)
+    Test ID (foreign key)
+    Result
+    Date Generated
+
+Patients:
+
+    Patient ID (primary key)
+    Name
+    Date of Birth
+    Gender
+
+
+"""
 
 
 if __name__ == '__main__':
