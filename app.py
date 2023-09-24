@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-"""
-Main app.py file that contains the configuration
-for the application itself"""
 
+# ----------------------------------------------------------------
 """All reqired imports """
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -16,23 +14,30 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from forms import LoginForm, UserForm, UserUpdateForm, PatientRegForm, PatientUpdateForm
 
 
+# ----------------------------------------------------------------
 """This is the main application entry point and the application
 secret key"""
 
 app = Flask(__name__)
+
+
+# Secret key
 app.secret_key = "devops/ITS2022@."
 
 
+# ----------------------------------------------------------------
 '''SQLalchemy Configurations and as well database creation'''
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:devops/ITS2022@localhost:3306/labxact"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
+# ----------------------------------------------------------------
 '''Handles the database migration'''
 migrate = Migrate(app, db)
 
 
+# ----------------------------------------------------------------
 """
 This handles the login features and session management for the application
 """
@@ -48,12 +53,15 @@ def load_user(user_id):
     return Users.query.get(int(user_id))
 
 
-
+# ----------------------------------------------------------------
 """
 These are the routes that are present in the application
 """
 
+
 # home page
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -78,9 +86,13 @@ def add_patient():
 
     form = PatientRegForm()
 
-    # generate the PID Number
+    # Retrieve the total number of patients from the database
     total_patients = Patients.query.count()
+
+    # Determine the number of digits required
     num_digits = len(str(total_patients + 1))
+
+    # Format the patient ID with leading zeros
     patient_id = f"PID-{str(total_patients + 1).zfill(num_digits)}"
 
     if form.validate_on_submit():
@@ -117,8 +129,7 @@ def add_patient():
 
         # Calculate the age based on the date of birth
         return redirect(url_for("add_patient"))
-    return render_template('add_patient.html', form=form, pid=patient_id, 
-                           all_patients=all_patients, current_user=current_user)
+    return render_template('add_patient.html', form=form, pid=patient_id, all_patients=all_patients, current_user=current_user)
 
 
 # update patient information
@@ -255,7 +266,7 @@ def login():
             # check hash
             if check_password_hash(user.password_hash, form.password.data):
                 login_user(user)
-                flash(f"Welcome {current_user.fullname.upper()}!")
+                flash("Login Successful!")
                 return redirect(url_for('dashboard'))
             else:
                 flash("Wrong Password! - Please Try again.")
@@ -285,11 +296,12 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
-
+# ----------------------------------------------------------------
 """
 The models below create database tables for the application and 
 ensures that the database tables are created in the correct order
 """
+
 
 # User Model
 class Users(db.Model, UserMixin):
@@ -324,7 +336,7 @@ class Patients(db.Model):
     __tablename__ = 'patients'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    patient_id = Column(String(255), unique=True, nullable=False)
+    patient_id = Column(String(100), unique=True, nullable=False)
     firstname = Column(String(50), nullable=False)
     middlename = Column(String(50))
     lastname = Column(String(50), nullable=False)
@@ -336,8 +348,28 @@ class Patients(db.Model):
     address = Column(String(150), nullable=False)
     date_registered = Column(
         DateTime, default=datetime.now(), nullable=False)
-    
-    patient_sample = relationship('Samples', back_populates="patients")
+
+    test_id = Column(Integer, ForeignKey('tests.id'))
+
+    test = relationship("Tests")
+
+
+# Sections model
+class Sections(db.Model):
+    __tablename__ = 'sections'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    Section_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+
+
+# Inventory model
+class Inventory(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    inventory_id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    quantity = Column(Integer, primary_key=True)
+
 
 # Test model
 class Tests(db.Model):
@@ -345,68 +377,38 @@ class Tests(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
-    price = Column(Float, nullable=False)
-    section = Column(Integer, ForeignKey("sections.id"))
-
-    # Relationship to the Section table
-    section = relationship('Sections', back_populates='tests')
-
-    # Relationship to the Sample table
-    samples = relationship("Samples", back_populates="test")
 
 
-# Samples Model
 class Samples(db.Model):
     id = Column(Integer, primary_key=True)
     sample_id = Column(Integer, primary_key=True)
-    type = Column(String(50), nullable=False)
-    patient_id = Column(Integer, ForeignKey('patients.id'))
-    test_id = Column(Integer, ForeignKey('tests.id'))
-    date_registered = Column(
-        DateTime, default=datetime.now(), nullable=False)
-    status = Column(String(25), nullable=False)
 
-    # Relationship to the Test table
-    test = relationship('Test', back_populates='samples')
-    
+"""
+Samples:
 
-# Sections model
-class Sections(db.Model):
-    __tablename__ = 'sections'
+    Sample ID (primary key)
+    Patient ID (foreign key)
+    Test ID (foreign key)
+    Collection Date
+    Status
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False)
-    
-    # Relationship to the Users table
-    users = relationship('Users', back_populates='sections')
+Reports:
 
-    # Relationship to the Tests table
-    tests = relationship('Tests', back_populates='section')
+    Report ID (primary key)
+    Sample ID (foreign key)
+    Test ID (foreign key)
+    Result
+    Date Generated
 
+Patients:
 
-# Inventory model
-class Inventory(db.Model):
-    __tablename__ = 'inventory'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False)
-    quantity = Column(Integer, primary_key=True)
+    Patient ID (primary key)
+    Name
+    Date of Birth
+    Gender
 
 
-# Report model
-class Reports(db.Model):
-    __tablename__ = 'reports'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    sample_id = Column(Integer, ForeignKey("samples.id"))
-    test_id = Column(Integer, ForeignKey("tests.id"))
-    result = Column(String(255))
-
-    # Relationship to the Sample table
-    sample = relationship('Samples', back_populates='test_results')
-
-    # Relationship to the Test table
-    test = relationship('Tests', back_populates='test_results')
+"""
 
 
 if __name__ == '__main__':
