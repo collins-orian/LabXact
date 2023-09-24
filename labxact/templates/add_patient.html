@@ -11,10 +11,10 @@ content %} {% for message in get_flashed_messages() %}
 	></button>
 </div>
 
-{% endfor %}
+{% endfor %} {% if current_user.section == 'Reception' %}
 
-<div class="row" style="width: 100%">
-	<div class="col-md-6" style="width: 40%">
+<div class="row" style="width: 100%; align-items: center">
+	<div class="col-md-6" style="width: 50%">
 		<h1>Register Patient</h1>
 		<br />
 		<div class="shadow p-3 mb-5 bg-body-tertiary rounded">
@@ -47,13 +47,14 @@ content %} {% for message in get_flashed_messages() %}
 			<br /><br /><br />
 		</div>
 	</div>
-	<div class="col-md-6" style="width: 60%">
+	<div class="col-md-6" style="width: 50%">
 		<img
 			src="../static/images/records.svg"
 			style="width: 100%; margin: 0 auto"
 		/>
 	</div>
 </div>
+
 <br />
 <table class="table table-hover table-bordered table-striped">
 	<h1>Registered Patients</h1>
@@ -85,4 +86,13 @@ content %} {% for message in get_flashed_messages() %}
 	</tr>
 	{% endfor %}
 </table>
-{% endblock %}
+
+{% else %}
+
+<br><br>
+<center>
+	<h1>Unauthorised Access!</h1>
+	<h5>Sorry, you are not allowed to access this page...</h5>
+</center>
+
+{% endif %} {% endblock %}

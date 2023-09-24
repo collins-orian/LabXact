@@ -1,14 +1,19 @@
-body {
+body,
+html {
+	height: 100%;
 	width: 100%;
+	display: flex;
+	align-items: center;
 	background-color: #273469;
 	font-family: "Urbanist", sans-serif;
 }
 
 .row {
 	width: 100%;
-	margin: 0 auto;
-	height: 750px;
+	height: 100%;
+	align-items: center;
 }
+
 .row h1 {
 	font-size: 230px;
 	padding: 0;
@@ -25,7 +30,7 @@ body {
 	padding: 0;
 	margin: 0;
 }
-.login-form {
+.login_form {
 	min-width: 300px;
 	max-width: 300px;
 	margin: 0 auto;
@@ -34,10 +39,6 @@ body {
 }
 
 .form_col {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin: 0 auto;
 	width: 40%;
 }
 
@@ -50,8 +51,8 @@ body {
 	border: 2px solid #273469;
 }
 
-.login-form .btn {
-	font-size: 15px;
+.login_form .btn {
+	font-size: 18px;
 	font-weight: bold;
 	margin-bottom: 30px;
 	border-radius: 1000px;
@@ -59,22 +60,22 @@ body {
 
 /* Responsive CSS using media queries */
 @media (max-width: 576px) {
-	.login-form {
+	.login_form {
 		margin-top: 50px;
 	}
 }
 
 @media (max-width: 400px) {
-	.login-form {
+	.login_form {
 		margin-top: 20px;
 		padding: 15px;
 	}
-	.login-form h2 {
+	.login_form h2 {
 		font-size: 22px;
 		margin-bottom: 20px;
 	}
-	.login-form .form-control,
-	.login-form .btn {
+	.login_form .form-control,
+	.login_form .btn {
 		min-height: 35px;
 		font-size: 14px;
 	}

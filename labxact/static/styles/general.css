@@ -1,0 +1,20 @@
+h1,
+h2 {
+	color: #273469;
+}
+
+html,
+body {
+	font-family: "Urbanist", sans-serif;
+	height: 100%;
+}
+
+.navbar div * {
+	color: #273469;
+}
+
+.nav-link:hover{
+	color: #273469;
+	background-color: #ffc107;
+	border-radius: 0.375rem;
+}
