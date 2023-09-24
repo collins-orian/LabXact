@@ -23,8 +23,8 @@
 		/>
 		<title>{% block title %}{% endblock %}</title>
 	</head>
+	{% include 'navbar.html' %}
 	<body>
-		{% include 'navbar.html' %}
 		<br />
 		<div class="container">{% block content %} {% endblock %}</div>
 		<script
@@ -43,8 +43,9 @@
 			crossorigin="anonymous"
 		></script>
 		<script></script>
+		</div>
+		<!-- <footer class="footer">
+			<center>Copyright &copy; LabXact</center>
+		</footer> -->
 	</body>
-	<footer class="footer">
-		<!-- fit in footer here -->
-	</footer>
 </html>
