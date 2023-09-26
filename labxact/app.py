@@ -5,7 +5,7 @@
 """All reqired imports """
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, Date, Enum, ForeignKey, DateTime
+from sqlalchemy import inspect, Column, Integer, String, Date, Enum, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from flask_migrate import Migrate
 from datetime import datetime
@@ -28,7 +28,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:devops/ITS2022@localhost:3
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
-
 
 # ----------------------------------------------------------------
 '''Handles the database migration'''
@@ -74,7 +73,8 @@ def dashboard():
 @login_required
 def add_patient():
     # Create a new table if it doesn't exist
-    if not Patients.__table__.exists(db.engine):
+    inspector = inspect(db.engine)
+    if not inspector.has_table('Patients'):
         db.create_all()
 
     pid = None
@@ -88,13 +88,13 @@ def add_patient():
     patient_id = f"PID-{str(total_patients + 1).zfill(num_digits)}"
 
     if form.validate_on_submit():
-
         try:
             pid = Patients.query.filter_by(id=patient_id).first()
             if pid is None:
-
-                patient = Patients(patient_id=form.patient_id.data, firstname=form.firstname.data, middlename=form.middlename.data, lastname=form.lastname.data,
-                                   date_of_birth=form.dob.data, age=form.age.data, gender=form.gender.data, mobile=form.mobile.data, email=form.email.data, address=form.address.data)
+                patient = Patients(patient_id=form.patient_id.data, firstname=form.firstname.data, 
+                                   middlename=form.middlename.data, lastname=form.lastname.data,
+                                   date_of_birth=form.dob.data, age=form.age.data, gender=form.gender.data, 
+                                   mobile=form.mobile.data, email=form.email.data, address=form.address.data)
                 db.session.add(patient)
                 db.session.commit()
         except:
@@ -114,7 +114,8 @@ def add_patient():
         flash("Patient Registered Successfully")
         # Calculate the age based on the date of birth
         return redirect(url_for("add_patient"))
-    return render_template('add_patient.html', form=form, pid=patient_id, all_patients=all_patients, current_user=current_user)
+    return render_template('add_patient.html', form=form, pid=patient_id, all_patients=all_patients, 
+                           current_user=current_user)
 
 
 # update patient information
@@ -184,7 +185,8 @@ def delete_user(id):
 @login_required
 def add_user():
     # Create a new table if it doesn't exist
-    if not Users.__table__.exists(db.engine):
+    inspector = inspect(db.engine)
+    if not inspector.has_table('Users'):
         db.create_all()
 
     all_users = Users.query.order_by(Users.date_added)
@@ -195,7 +197,8 @@ def add_user():
         if user_email is None and user_username is None:
             hashed_pwd = generate_password_hash(form.password.data, "sha256")
             user = Users(fullname=form.fullname.data, username=form.username.data,
-                         email=form.email.data, role=form.role.data, section=form.section.data, password_hash=hashed_pwd)
+                         email=form.email.data, role=form.role.data, section=form.section.data, 
+                         password_hash=hashed_pwd)
             db.session.add(user)
             db.session.commit()
         form.username.data = ''
@@ -294,6 +297,9 @@ class Users(db.Model, UserMixin):
     section = Column(String(50), nullable=False)
     date_added = Column(DateTime, default=datetime.utcnow())
 
+    # Relationship to the Sections table
+    # section = relationship('Sections', back_populates='users')
+
     @property
     def password(self):
         raise AttributeError("Password is not a readable attribute!")
@@ -327,27 +333,12 @@ class Patients(db.Model):
     date_registered = Column(
         DateTime, default=datetime.now(), nullable=False)
 
-    test_id = Column(Integer, ForeignKey('tests.id'))
-
-    test = relationship("Tests")
+    # sample = relationship('Samples', back_populates="patients")
 
 
-# Sections model
-class Sections(db.Model):
-    __tablename__ = 'sections'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    Section_id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False)
-
-
-# Inventory model
-class Inventory(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    inventory_id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False)
-    quantity = Column(Integer, primary_key=True)
-
+"""
+    
+    
 
 # Test model
 class Tests(db.Model):
@@ -355,35 +346,68 @@ class Tests(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
+    price = Column(Float, nullable=False)
+    section = Column(Integer, ForeignKey("sections.id"))
+
+    # Relationship to the Section table
+    section = relationship('Sections', back_populates='tests')
+
+    # Relationship to the Sample table
+    samples = relationship("Samples", back_populates="test")
 
 
+# Samples Model
 class Samples(db.Model):
     id = Column(Integer, primary_key=True)
     sample_id = Column(Integer, primary_key=True)
+    type = Column(String(50), nullable=False)
+    patient_id = Column(Integer, ForeignKey('patients.id'))
+    test_id = Column(Integer, ForeignKey('tests.id'))
+    date_registered = Column(
+        DateTime, default=datetime.now(), nullable=False)
+    status = Column(String(25), nullable=False)
 
-"""
-Samples:
+    # Relationship to the Test table
+    test = relationship('Test', back_populates='samples')
+    
 
-    Sample ID (primary key)
-    Patient ID (foreign key)
-    Test ID (foreign key)
-    Collection Date
-    Status
+# Sections model
+class Sections(db.Model):
+    __tablename__ = 'sections'
 
-Reports:
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    
+    # Relationship to the Users table
+    users = relationship('Users', back_populates='sections')
 
-    Report ID (primary key)
-    Sample ID (foreign key)
-    Test ID (foreign key)
-    Result
-    Date Generated
+    # Relationship to the Tests table
+    tests = relationship('Tests', back_populates='section')
 
-Patients:
 
-    Patient ID (primary key)
-    Name
-    Date of Birth
-    Gender
+# Inventory model
+class Inventory(db.Model):
+    __tablename__ = 'inventory'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    quantity = Column(Integer, primary_key=True)
+
+
+# Report model
+class Reports(db.Model):
+    __tablename__ = 'reports'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    sample_id = Column(Integer, ForeignKey("samples.id"))
+    test_id = Column(Integer, ForeignKey("tests.id"))
+    result = Column(String(255))
+
+    # Relationship to the Sample table
+    sample = relationship('Samples', back_populates='test_results')
+
+    # Relationship to the Test table
+    test = relationship('Tests', back_populates='test_results')
 
 
 """
