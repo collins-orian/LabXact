@@ -3,11 +3,13 @@
 
 # ----------------------------------------------------------------
 """All reqired imports """
+import os
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect, Column, Integer, String, Date, Enum, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from flask_migrate import Migrate
+from config import settings
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -19,12 +21,13 @@ from forms import LoginForm, UserForm, UserUpdateForm, PatientRegForm, PatientUp
 secret key"""
 
 app = Flask(__name__)
-app.secret_key = "devops/ITS2022@."
+app.secret_key = settings.SECRET_KEY
 
 
 # ----------------------------------------------------------------
 '''SQLalchemy Configurations and as well database creation'''
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:devops/ITS2022@localhost:3306/labxact"
+
+app.config["SQLALCHEMY_DATABASE_URI"] = settings.SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -68,7 +71,7 @@ def home():
 def dashboard():
     return render_template('dashboard.html')
 
-
+# patient registration page 
 @app.route('/patient/register', methods=['GET', 'POST'])
 @login_required
 def add_patient():
