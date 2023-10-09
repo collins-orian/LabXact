@@ -63,7 +63,8 @@ To get started with LabXact, follow these steps:
 2. Run the application:
 
     ```bash
-    python run.py
+    cd labxact/
+    python app.py
     ```
 
 3. Open your web browser and navigate to `http://localhost:5000` to access the LabXact application.
@@ -101,3 +102,4 @@ We welcome contributions from the community to improve LabXact. If you would lik
 - [Inaboya Collins](mailto:inaboyacollins@icloud.com)
 - [Emmanuella Ugonma Nkwocha](mailto:nnandibekee@gmail.com)
 - [Abigail Godfrey Ivie Owamagbe](mailto:owamagbeabigail@gmail.com)
+- [Adimefe Ifeanyi Jefferson](mailto:adimsjefferson@gmail.com)

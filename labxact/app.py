@@ -71,7 +71,9 @@ def home():
 def dashboard():
     return render_template('dashboard.html')
 
-# patient registration page 
+# patient registration page
+
+
 @app.route('/patient/register', methods=['GET', 'POST'])
 @login_required
 def add_patient():
@@ -94,9 +96,9 @@ def add_patient():
         try:
             pid = Patients.query.filter_by(id=patient_id).first()
             if pid is None:
-                patient = Patients(patient_id=form.patient_id.data, firstname=form.firstname.data, 
+                patient = Patients(patient_id=form.patient_id.data, firstname=form.firstname.data,
                                    middlename=form.middlename.data, lastname=form.lastname.data,
-                                   date_of_birth=form.dob.data, age=form.age.data, gender=form.gender.data, 
+                                   date_of_birth=form.dob.data, age=form.age.data, gender=form.gender.data,
                                    mobile=form.mobile.data, email=form.email.data, address=form.address.data)
                 db.session.add(patient)
                 db.session.commit()
@@ -117,7 +119,7 @@ def add_patient():
         flash("Patient Registered Successfully")
         # Calculate the age based on the date of birth
         return redirect(url_for("add_patient"))
-    return render_template('add_patient.html', form=form, pid=patient_id, all_patients=all_patients, 
+    return render_template('add_patient.html', form=form, pid=patient_id, all_patients=all_patients,
                            current_user=current_user)
 
 
@@ -200,7 +202,7 @@ def add_user():
         if user_email is None and user_username is None:
             hashed_pwd = generate_password_hash(form.password.data, "sha256")
             user = Users(fullname=form.fullname.data, username=form.username.data,
-                         email=form.email.data, role=form.role.data, section=form.section.data, 
+                         email=form.email.data, role=form.role.data, section=form.section.data,
                          password_hash=hashed_pwd)
             db.session.add(user)
             db.session.commit()
@@ -417,4 +419,4 @@ class Reports(db.Model):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(port=5000)
