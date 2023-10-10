@@ -40,17 +40,19 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
+    """This method loads current user based on
+    the user id"""
     return Users.query.get(int(user_id))
 
 
 # These are the routes that are present in the application
 # They are all defined below
-# ----------------------------------------------------------------
 
 
 # home page
 @app.route('/')
 def home():
+    """This route takes you to the home page"""
     return render_template('index.html')
 
 
@@ -58,7 +60,7 @@ def home():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    """This is the dashboard page"""
+    """This route takes you to the dashboard page"""
     return render_template('dashboard.html')
 
 
@@ -67,7 +69,8 @@ def dashboard():
 @app.route('/patient/register', methods=['GET', 'POST'])
 @login_required
 def add_patient():
-    """Create a new table if it doesn't exist"""
+    """This route takes you to the patient
+    registration page"""
     inspector = inspect(db.engine)
     if not inspector.has_table('Patients'):
         db.create_all()
@@ -113,10 +116,11 @@ def add_patient():
                            current_user=current_user)
 
 
-# update patient information
+# update patient page
 @app.route('/modify_patient/<int:id>', methods=['GET', 'POST'])
 @login_required
 def modify_patient(id):
+    """This route takes you to patients update page"""
     form = PatientUpdateForm()
     patient_to_update = Patients.query.get_or_404(id)
     if request.method == "POST":
@@ -140,10 +144,11 @@ def modify_patient(id):
         return render_template("modify_patient.html", form=form, patient_to_update=patient_to_update, id=id)
 
 
-# delete patient from database
+# delete patient page
 @app.route('/delete_patient/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_patient(id):
+    """This route deletes patient record"""
     form = PatientRegForm()
     all_patients = Patients.query.order_by(Patients.date_registered)
     patient_to_delete = Patients.query.get_or_404(id)
@@ -162,6 +167,7 @@ def delete_patient(id):
 @app.route('/delete_user/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_user(id):
+    """This route deletes user record"""
     form = UserForm()
     user_to_delete = Users.query.get_or_404(id)
     try:
@@ -179,7 +185,7 @@ def delete_user(id):
 @app.route('/user/add', methods=['GET', 'POST'])
 @login_required
 def add_user():
-    # Create a new table if it doesn't exist
+    """This route takes you to the add user page"""
     inspector = inspect(db.engine)
     if not inspector.has_table('Users'):
         db.create_all()
@@ -212,6 +218,7 @@ def add_user():
 @app.route('/modify_user/<int:id>', methods=['GET', 'POST'])
 @login_required
 def modify_user(id):
+    """This route modifies users information"""
     form = UserUpdateForm()
     user_to_update = Users.query.get_or_404(id)
     if request.method == "POST":
@@ -235,6 +242,7 @@ def modify_user(id):
 # Login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """This route takes you to the login page"""
     form = LoginForm()
     if form.validate_on_submit():
         user = Users.query.filter_by(username=form.username.data).first()
@@ -255,6 +263,7 @@ def login():
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
+    """This route logs you out of your account"""
     logout_user()
     flash("Logout Successful!")
     return redirect(url_for('login'))
@@ -263,24 +272,26 @@ def logout():
 # Invalid URL
 @app.errorhandler(404)
 def page_not_found(e):
+    """This route returns an error page if page
+    is not found"""
     return render_template('404.html'), 404
 
 
 # Internal server error
 @app.errorhandler(500)
 def internal_server_error(e):
+    """This route returns an error page when the
+    server is down or has issues"""
     return render_template('500.html'), 500
 
 
-# ----------------------------------------------------------------
-"""
-The models below create database tables for the application and 
-ensures that the database tables are created in the correct order
-"""
+# The models below create database tables for the application and 
+# ensures that the database tables are created in the correct order
 
 
 # User Model
 class Users(db.Model, UserMixin):
+    """This is the user class that defines the user model"""
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -297,21 +308,30 @@ class Users(db.Model, UserMixin):
 
     @property
     def password(self):
+        """This method raises error if password doesn't
+        match the requirement"""
         raise AttributeError("Password is not a readable attribute!")
 
     @password.setter
     def password(self, password):
+        """This method generates a hash password"""
         self.password_hash = generate_password_hash(password)
 
     def veryfy_password(self, password):
+        """This method matches the hash password on the database
+        to that of the password entered by the user for login"""
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
+        """This method returns the users fullname
+        as string"""
         return '<Name %r>' % self.fullname
 
 
 # Patient model
 class Patients(db.Model):
+    """This is the patient class that defines the
+    patient model"""
     __tablename__ = 'patients'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
