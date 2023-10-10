@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+"""This file contains routes and main functionality
+for the app"""
 
 
-# ----------------------------------------------------------------
-"""All reqired imports """
+# All reqired imports
 import os
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -16,33 +17,22 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from forms import LoginForm, UserForm, UserUpdateForm, PatientRegForm, PatientUpdateForm
 
 
-# ----------------------------------------------------------------
-"""This is the main application entry point and the application
-secret key"""
-
+# This is the main application entry point and the application secret key
 app = Flask(__name__)
 app.secret_key = settings.SECRET_KEY
 
 
-# ----------------------------------------------------------------
-'''SQLalchemy Configurations and as well database creation'''
-
+# SQLalchemy Configurations and as well database creation
 app.config["SQLALCHEMY_DATABASE_URI"] = settings.SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-# ----------------------------------------------------------------
-'''Handles the database migration'''
+# Handles the database migration
 migrate = Migrate(app, db)
 
 
-# ----------------------------------------------------------------
-"""
-This handles the login features and session management for the application
-"""
-
-# Handling flask_login
+# This handles the login features and session management for the application
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -53,10 +43,9 @@ def load_user(user_id):
     return Users.query.get(int(user_id))
 
 
+# These are the routes that are present in the application
+# They are all defined below
 # ----------------------------------------------------------------
-"""
-These are the routes that are present in the application
-"""
 
 
 # home page
@@ -69,15 +58,16 @@ def home():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    """This is the dashboard page"""
     return render_template('dashboard.html')
 
+
+
 # patient registration page
-
-
 @app.route('/patient/register', methods=['GET', 'POST'])
 @login_required
 def add_patient():
-    # Create a new table if it doesn't exist
+    """Create a new table if it doesn't exist"""
     inspector = inspect(db.engine)
     if not inspector.has_table('Patients'):
         db.create_all()
