@@ -28,9 +28,6 @@ class Users(db.Model, UserMixin):
     # Relationship to the Sections table
     # section = relationship('Sections', back_populates='users')
 
-    def __init__(self):
-        super().__init__()
-
     @property
     def password(self):
         """This method raises error if password doesn't

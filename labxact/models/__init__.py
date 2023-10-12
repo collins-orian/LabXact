@@ -6,6 +6,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 def init_db(app):
+    """This method"""
     db.init_app(app)
     migrate.init_app(app, db)
     with app.app_context():
