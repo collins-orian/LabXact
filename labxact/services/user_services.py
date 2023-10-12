@@ -10,9 +10,10 @@ from models import db
 class UserService:
     """This is the userservice class that handles
     database queries"""
-    def create_user(self, fullname, username, email, password, role, section):
+
+    def create_user(self, firstname, lastname, username, email, password, role, section):
         """This method creates new users on the database"""
-        user = Users(fullname=fullname, username=username, email=email,
+        user = Users(firstname=firstname, lastname=lastname, username=username, email=email,
                      password_hash=password, role=role, section=section)
         db.session.add(user)
         db.session.commit()
@@ -48,10 +49,11 @@ class UserService:
         user = Users.query.filter_by(email=email).first()
         return user
 
-    def update_user(self, user, fullname, username, email, password, role, section):
+    def update_user(self, user, firstname, lastname, username, email, password, role, section):
         """This method updates users details on
         the database"""
-        user.fullname = fullname
+        user.firstname = firstname
+        user.lastname = lastname
         user.username = username
         user.email = email
         user.password_hash = password

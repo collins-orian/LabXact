@@ -24,6 +24,7 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				{% if current_user.role == 'admin' %}
 				<li class="nav-item">
 					<a
 						class="nav-link active"
@@ -33,7 +34,7 @@
 						>Dashboard</a
 					>
 				</li>
-				{% if current_user.role == 'admin' %}
+				{% endif %} {% if current_user.role == 'admin' %}
 				<li class="nav-item">
 					<a
 						class="nav-link active"

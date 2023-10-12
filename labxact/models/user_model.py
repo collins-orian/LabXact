@@ -17,7 +17,8 @@ class Users(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    fullname = Column(String(100), nullable=False)
+    firstname = Column(String(100), nullable=False)
+    lastname = Column(String(100), nullable=False)
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(50), unique=True, nullable=False)
     password_hash = Column(String(128), nullable=False)
@@ -47,4 +48,4 @@ class Users(db.Model, UserMixin):
     def __repr__(self):
         """This method returns the users fullname
         as string"""
-        return '<Name %r>' % self.fullname
+        return '<Name %r>' % self.firstname + ' ' + self.lastname

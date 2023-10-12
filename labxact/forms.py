@@ -11,7 +11,8 @@ from wtforms.validators import data_required, equal_to
 class UserForm(FlaskForm):
     """This is the userform class used for data entry
     for the user model data"""
-    fullname = StringField("Fullname", validators=[data_required()])
+    firstname = StringField("First Name", validators=[data_required()])
+    lastname = StringField("Last Name", validators=[data_required()])
     username = StringField("Username", validators=[data_required()])
     email = StringField("Email", validators=[data_required()])
     role = SelectField(u'Role', choices=[('labstaff', 'Laboratory Staff'), ('labmanager', 'Laboratory Manager'), (
@@ -29,12 +30,14 @@ class UserForm(FlaskForm):
 class UserUpdateForm(FlaskForm):
     """This class is used to update existing data
     with new data in the user model"""
-    fullname = StringField("Fullname", validators=[data_required()])
+    firstname = StringField("First Name", validators=[data_required()])
+    lastname = StringField("Last Name", validators=[data_required()])
     username = StringField("Username", validators=[data_required()])
     email = StringField("Email", validators=[data_required()])
-    role = SelectField(u'Role', choices=[('labstaff', 'Laboratory Staff'), ('labmanager', 'Laboratory Manager'), (
-        'super', 'Supervisor'), ('admin', 'Administrator')], validators=[data_required()])
-    section = SelectField(u'Assigned Section', choices=[('Reception', 'Reception'), ('Chemistry', 'Clinical Chemistry'), ('Haematology', 'Haematology'), (
+    role = SelectField(u'Role', choices=[('labstaff', 'Laboratory Staff'), ('labmanager', 'Laboratory Manager'),
+                                         ('super', 'Supervisor'), ('admin', 'Administrator')], validators=[data_required()])
+    section = SelectField(u'Assigned Section', choices=[('Reception', 'Reception'),
+                                                        ('Chemistry', 'Clinical Chemistry'), ('Haematology', 'Haematology'), (
         'Microbiology', 'Medical Microbiology')], validators=[data_required()])
     password = PasswordField("Password", validators=[equal_to(
         'password_confirm', message="Passwords Must match")])
@@ -57,9 +60,9 @@ class PatientRegForm(FlaskForm):
     for the patient model data"""
     patient_id = StringField("Patient ID Number (PID)",
                              validators=[data_required()])
-    firstname = StringField("Firstname", validators=[data_required()])
-    middlename = StringField("Middlename")
-    lastname = StringField("Lastname", validators=[data_required()])
+    firstname = StringField("First Name", validators=[data_required()])
+    middlename = StringField("Middle Name")
+    lastname = StringField("Last Name", validators=[data_required()])
     dob = DateField("Date Of Birth", validators=[
                     data_required()], format='%Y-%m-%d')
     age = IntegerField("Age", validators=[data_required()])
@@ -77,9 +80,9 @@ class PatientUpdateForm(FlaskForm):
     with new data in the patient model"""
     patient_id = StringField("Patient ID Number (PID)",
                              validators=[data_required()])
-    firstname = StringField("Firstname", validators=[data_required()])
-    middlename = StringField("Middlename")
-    lastname = StringField("Lastname", validators=[data_required()])
+    firstname = StringField("First Name", validators=[data_required()])
+    middlename = StringField("Middle Name")
+    lastname = StringField("Last Name", validators=[data_required()])
     dob = DateField("Date Of Birth", validators=[
                     data_required()], format='%Y-%m-%d')
     age = IntegerField("Age", validators=[data_required()])

@@ -21,26 +21,33 @@ content %} {% for message in get_flashed_messages() %}
 		<br />
 		<div class="shadow p-3 mb-5 bg-body-tertiary rounded">
 			<form method="POST" action="/modify_user/{{user_to_update.id}}">
-				{{ form.hidden_tag() }} {{ form.fullname.label(class='form-label',
-				style="color: #273469") }} {{ form.fullname(class='form-control mb-3',
-				value=user_to_update.fullname) }} {{
-				form.username.label(class='form-label', style="color: #273469") }} {{
-				form.username(class='form-control mb-3', value=user_to_update.username)
-				}} {{ form.email.label(class='form-label', style="color: #273469") }} {{
+				{{ form.hidden_tag() }} {{ form.firstname.label(class='form-label',
+				style="color: #273469") }} {{ form.firstname(class='form-control mb-3',
+				value=user_to_update.firstname) }}
+				{{form.lastname.label(class='form-label', style="color: #273469") }} {{
+				form.lastname(class='form-control mb-3', value=user_to_update.lastname)
+				}} {{ form.username.label(class='form-label', style="color: #273469") }}
+				{{ form.username(class='form-control mb-3',
+				value=user_to_update.username) }} {{
+				form.email.label(class='form-label', style="color: #273469") }} {{
 				form.email(class='form-control mb-3', value=user_to_update.email) }} {{
 				form.role.label(class='form-label' , style="color: #273469") }} {{
-				form.role(class='form-control mb-3 form-select', value=user_to_update.role) }} {{
-				form.section.label(class='form-label' , style="color: #273469") }} {{
-				form.section(class='form-control mb-3 form-select', value=user_to_update.section) }}
-				{{ form.password.label(class='form-label', style="color: #273469") }} {{
+				form.role(class='form-control mb-3 form-select',
+				value=user_to_update.role) }} {{ form.section.label(class='form-label' ,
+				style="color: #273469") }} {{ form.section(class='form-control mb-3
+				form-select' , value=user_to_update.section) }} {{
+				form.password.label(class='form-label', style="color: #273469") }} {{
 				form.password(class='form-control mb-3', value=user_to_update.password,
-				placeholder="8-20 characters.") }} {{
-				form.password_confirm.label(class='form-label', style="color: #273469")
-				}} {{ form.password_confirm(class='form-control mb-3') }}
+				placeholder="8-20 characters.") }}
+				{{form.password_confirm.label(class='form-label', style="color:
+				#273469") }} {{ form.password_confirm(class='form-control mb-3',
+				placeholder="Must match password above") }}
 				<br />
 				{{ form.submit(class='btn btn-warning', style="color: #273469; border:
 				none; background-color: #ffc107; hover-color: blue") }}
-				<a href="{{url_for('delete_user', id=id)}}" class="btn btn-danger">Delete</a>
+				<a href="{{url_for('delete_user', id=id)}}" class="btn btn-danger"
+					>Delete</a
+				>
 			</form>
 		</div>
 	</div>

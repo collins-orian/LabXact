@@ -7,7 +7,6 @@ for the app"""
 from flask import Flask, request, render_template, redirect, url_for, flash
 from models import init_db
 from config import settings
-from sqlalchemy import inspect
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from forms import LoginForm, UserForm, UserUpdateForm, PatientRegForm, PatientUpdateForm
@@ -72,9 +71,6 @@ def dashboard():
 def add_patient():
     """This route takes you to the patient
     registration page"""
-    # inspector = inspect(db.engine)
-    # if not inspector.has_table('Patients'):
-    #     db.create_all()
 
     pid = None
     all_patients = patients.all_patients()
@@ -202,7 +198,8 @@ def add_user():
             try:
                 hashed_pwd = generate_password_hash(
                     form.password.data, "sha256")
-                users.create_user(fullname=form.fullname.data,
+                users.create_user(firstname=form.firstname.data,
+                                  lastname=form.lastname.data,
                                   username=form.username.data,
                                   email=form.email.data,
                                   role=form.role.data,
@@ -214,7 +211,8 @@ def add_user():
                 flash("User Add Failed!")
                 return redirect(url_for("add_user"))
         form.username.data = ''
-        form.fullname.data = ''
+        form.firstname.data = ''
+        form.lastname.data = ''
         form.email.data = ''
         form.role.data = ''
         form.section.data = ''
@@ -233,7 +231,8 @@ def modify_user(id):
     user_to_update = users.get_user(id)
     if request.method == "POST":
         try:
-            users.update_user(user_to_update, fullname=request.form.get('fullname'),
+            users.update_user(user_to_update, firstname=request.form.get('firstname'),
+                              lastname=request.form.get('lastname'),
                               username=request.form.get('username'),
                               email=request.form.get('email'),
                               role=request.form.get('role'),
@@ -261,7 +260,7 @@ def login():
             # check hash
             if check_password_hash(user.password_hash, form.password.data):
                 login_user(user)
-                flash(f"Welcome {current_user.fullname.upper()}!")
+                flash(f'Welcome {current_user.firstname} {current_user.lastname}!')
                 return redirect(url_for('dashboard'))
             else:
                 flash("Wrong Password! - Please Try again.")

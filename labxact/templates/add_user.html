@@ -18,10 +18,12 @@ content %} {% for message in get_flashed_messages() %}
 		<br />
 		<div class="shadow p-3 mb-5 bg-body-tertiary rounded">
 			<form method="POST">
-				{{ form.hidden_tag() }} {{ form.fullname.label(class='form-label',
-				style="color: #273469") }} {{ form.fullname(class='form-control mb-3')
-				}} {{ form.username.label(class='form-label', style="color: #273469") }}
-				{{ form.username(class='form-control mb-3') }} {{
+				{{ form.hidden_tag() }} {{ form.firstname.label(class='form-label',
+				style="color: #273469") }} {{ form.firstname(class='form-control mb-3')
+				}} {{ form.lastname.label(class='form-label', style="color: #273469") }}
+				{{ form.lastname(class='form-control mb-3') }} {{
+				form.username.label(class='form-label', style="color: #273469") }} {{
+				form.username(class='form-control mb-3') }} {{
 				form.email.label(class='form-label', style="color: #273469") }} {{
 				form.email(class='form-control mb-3') }} {{
 				form.role.label(class='form-label' , style="color: #273469") }} {{
@@ -31,7 +33,8 @@ content %} {% for message in get_flashed_messages() %}
 				form.password.label(class='form-label', style="color: #273469") }} {{
 				form.password(class='form-control mb-3', placeholder="8-20 characters")
 				}} {{ form.password_confirm.label(class='form-label', style="color:
-				#273469") }} {{ form.password_confirm(class='form-control mb-3') }}
+				#273469") }} {{ form.password_confirm(class='form-control mb-3',
+				placeholder="Must match password above") }}
 
 				<br />
 				{{ form.submit(class='btn btn-warning', style="color: #273469; border:
@@ -52,7 +55,8 @@ content %} {% for message in get_flashed_messages() %}
 	<br />
 	<tr>
 		<th>ID</th>
-		<th>FULLNAME</th>
+		<th>FIRST NAME</th>
+		<th>LAST NAME</th>
 		<th>EMAIL</th>
 		<th>USERNAME</th>
 		<th>ROLE</th>
@@ -62,7 +66,8 @@ content %} {% for message in get_flashed_messages() %}
 	{% for users in our_users %}
 	<tr>
 		<td>{{users.id}}</td>
-		<td>{{users.fullname}}</td>
+		<td>{{users.firstname}}</td>
+		<td>{{users.lastname}}</td>
 		<td>{{users.email}}</td>
 		<td>{{users.username}}</td>
 		<td>{{users.role}}</td>
@@ -76,12 +81,10 @@ content %} {% for message in get_flashed_messages() %}
 
 {% else %}
 
-<br><br>
+<br /><br />
 <center>
 	<h1>Unauthorised Access!</h1>
 	<h5>Sorry, you are not allowed to access this page...</h5>
 </center>
 
-{% endif %}
-
-{% endblock %}
+{% endif %} {% endblock %}
