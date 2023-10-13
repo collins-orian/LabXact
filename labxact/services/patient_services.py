@@ -5,11 +5,13 @@
 # All the imports
 from models.patient_model import Patients
 from models import db
+# import datetime
 
 
 class PatientService:
     """This is the patientservice class that handles
     database queries"""
+
     def create_patient(self, patient_id, firstname, middlename,
                        lastname, date_of_birth, age, gender, mobile,
                        email, address):
@@ -20,6 +22,22 @@ class PatientService:
         db.session.add(patient)
         db.session.commit()
         return patient
+
+    # def calculate_age(date_of_birth):
+    #     """Calculates the age of a person based on their date of birth.
+
+    #     Args:
+    #         date_of_birth: A datetime object representing the person's date of birth.
+
+    #     Returns:
+    #         An integer representing the person's age.
+    #     """
+
+    #     today = datetime.date.today()
+    #     age = today.year - date_of_birth.year - \
+    #         ((today.month, today.day) < (date_of_birth.month,
+    #                                      date_of_birth.day))
+    #     return age
 
     def get_patient(self, id):
         """This method gets patients from the

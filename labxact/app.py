@@ -84,18 +84,30 @@ def add_patient():
 
     if form.validate_on_submit():
         try:
-            pid = patients.get_patient_by_pid(patient_id=patient_id)
+            pid = patients.get_patient_by_pid(patient_id)
             if pid is None:
-                patients.create_patient(patient_id=form.patient_id.data,
-                                        firstname=form.firstname.data,
-                                        middlename=form.middlename.data,
-                                        lastname=form.lastname.data,
-                                        date_of_birth=form.dob.data,
-                                        age=form.age.data,
-                                        gender=form.gender.data,
-                                        mobile=form.mobile.data,
-                                        email=form.email.data,
-                                        address=form.address.data)
+                # Generate a new PID and try again.
+                # total_patients += 1
+                # num_digits = len(str(total_patients + 1))
+                # patient_id = f"PID-{str(total_patients + 1).zfill(num_digits)}"
+                # pid = patients.get_patient_by_pid(patient_id)
+
+                # Calculate the age of the patient based on the date of birth field in the form.
+                # age = patients.calculate_age(form.dob.data)
+
+                # Set the value of the age field in the form to the age that we calculated.
+                # form.age.data = age
+
+                patients.create_patient(form.patient_id.data,
+                                        form.firstname.data,
+                                        form.middlename.data,
+                                        form.lastname.data,
+                                        form.dob.data,
+                                        form.age.data,
+                                        form.gender.data,
+                                        form.mobile.data,
+                                        form.email.data,
+                                        form.address.data)
         except:
             flash('Patient with PID Number already exists!!!')
             return redirect(url_for('add_patient'))
@@ -128,15 +140,15 @@ def modify_patient(id):
     if request.method == "POST":
         try:
             patients.update_patient(patient_to_update,
-                                    firstname=request.form.get('firstname'),
-                                    middlename=request.form.get('middlename'),
-                                    lastname=request.form.get('lastname'),
-                                    date_of_birth=request.form.get('dob'),
-                                    age=request.form.get('age'),
-                                    gender=request.form.get('gender'),
-                                    mobile=request.form.get('mobile'),
-                                    email=request.form.get('email'),
-                                    address=request.form.get('address'))
+                                    request.form.get('firstname'),
+                                    request.form.get('middlename'),
+                                    request.form.get('lastname'),
+                                    request.form.get('dob'),
+                                    request.form.get('age'),
+                                    request.form.get('gender'),
+                                    request.form.get('mobile'),
+                                    request.form.get('email'),
+                                    request.form.get('address'))
             flash("Patient Details Updated Successfully!")
             return redirect(url_for("add_patient"))
         except:
@@ -192,19 +204,19 @@ def add_user():
     all_users = users.all_users()
     form = UserForm()
     if form.validate_on_submit():
-        user_email = users.get_user_by_email(email=form.email.data)
-        user_username = users.get_user_by_username(username=form.username.data)
+        user_email = users.get_user_by_email(form.email.data)
+        user_username = users.get_user_by_username(form.username.data)
         if user_email is None and user_username is None:
             try:
                 hashed_pwd = generate_password_hash(
                     form.password.data, "sha256")
-                users.create_user(firstname=form.firstname.data,
-                                  lastname=form.lastname.data,
-                                  username=form.username.data,
-                                  email=form.email.data,
-                                  role=form.role.data,
-                                  section=form.section.data,
-                                  password=hashed_pwd)
+                users.create_user(form.firstname.data,
+                                  form.lastname.data,
+                                  form.username.data,
+                                  form.email.data,
+                                  form.role.data,
+                                  form.section.data,
+                                  hashed_pwd)
                 flash("User Added Successfully")
                 return redirect(url_for("add_user"))
             except:
@@ -231,13 +243,14 @@ def modify_user(id):
     user_to_update = users.get_user(id)
     if request.method == "POST":
         try:
-            users.update_user(user_to_update, firstname=request.form.get('firstname'),
-                              lastname=request.form.get('lastname'),
-                              username=request.form.get('username'),
-                              email=request.form.get('email'),
-                              role=request.form.get('role'),
-                              section=request.form.get('section'),
-                              password=request.form.get('password'))
+            users.update_user(user_to_update,
+                              request.form.get('firstname'),
+                              request.form.get('lastname'),
+                              request.form.get('username'),
+                              request.form.get('email'),
+                              request.form.get('role'),
+                              request.form.get('section'),
+                              request.form.get('password'))
             flash("User Details Updated Successfully!")
             return redirect(url_for("add_user"))
         except:
@@ -255,12 +268,13 @@ def login():
     """This route takes you to the login page"""
     form = LoginForm()
     if form.validate_on_submit():
-        user = users.get_user_by_username(username=form.username.data)
+        user = users.get_user_by_username(form.username.data)
         if user:
             # check hash
             if check_password_hash(user.password_hash, form.password.data):
                 login_user(user)
-                flash(f'Welcome {current_user.firstname} {current_user.lastname}!')
+                flash(
+                    f'Welcome {current_user.firstname} {current_user.lastname}!')
                 return redirect(url_for('dashboard'))
             else:
                 flash("Wrong Password! - Please Try again.")

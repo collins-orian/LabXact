@@ -11,10 +11,13 @@ class UserService:
     """This is the userservice class that handles
     database queries"""
 
-    def create_user(self, firstname, lastname, username, email, password, role, section):
+    def create_user(self, firstname, lastname,
+                    username, email, password, role, section):
         """This method creates new users on the database"""
-        user = Users(firstname=firstname, lastname=lastname, username=username, email=email,
-                     password_hash=password, role=role, section=section)
+        user = Users(firstname=firstname, lastname=lastname,
+                     username=username, email=email,
+                     password_hash=password, role=role,
+                     section=section)
         db.session.add(user)
         db.session.commit()
         return user
@@ -22,7 +25,7 @@ class UserService:
     def get_user(self, id):
         """This method gets users from the
         database by id"""
-        user = Users.query.get(id)
+        user = Users.query.get_or_404(id)
         return user
 
     def all_users(self):
@@ -49,7 +52,8 @@ class UserService:
         user = Users.query.filter_by(email=email).first()
         return user
 
-    def update_user(self, user, firstname, lastname, username, email, password, role, section):
+    def update_user(self, user, firstname, lastname,
+                    username, email, password, role, section):
         """This method updates users details on
         the database"""
         user.firstname = firstname
