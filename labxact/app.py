@@ -7,6 +7,7 @@ for the app"""
 from flask import Flask, request, render_template, redirect, url_for, flash
 from models import init_db
 from config import settings
+from services import logger
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from forms import LoginForm, UserForm, UserUpdateForm, PatientRegForm, PatientUpdateForm
@@ -209,14 +210,14 @@ def add_user():
         if user_email is None and user_username is None:
             try:
                 hashed_pwd = generate_password_hash(
-                    form.password.data, "sha256")
+                    form.password.data, "scrypt")
                 users.create_user(form.firstname.data,
                                   form.lastname.data,
                                   form.username.data,
                                   form.email.data,
+                                  hashed_pwd,
                                   form.role.data,
-                                  form.section.data,
-                                  hashed_pwd)
+                                  form.section.data)
                 flash("User Added Successfully")
                 return redirect(url_for("add_user"))
             except:
@@ -231,7 +232,8 @@ def add_user():
         form.password.data = ''
         form.password_confirm.data = ''
 
-    return render_template('add_user.html', form=form, our_users=all_users)
+    return render_template('add_user.html',
+                           form=form, our_users=all_users)
 
 
 # update user information
@@ -248,9 +250,9 @@ def modify_user(id):
                               request.form.get('lastname'),
                               request.form.get('username'),
                               request.form.get('email'),
+                              request.form.get('password'),
                               request.form.get('role'),
-                              request.form.get('section'),
-                              request.form.get('password'))
+                              request.form.get('section'))
             flash("User Details Updated Successfully!")
             return redirect(url_for("add_user"))
         except:
@@ -274,7 +276,9 @@ def login():
             if check_password_hash(user.password_hash, form.password.data):
                 login_user(user)
                 flash(
-                    f'Welcome {current_user.firstname} {current_user.lastname}!')
+                    f'Welcome {user.firstname} {user.lastname}!')
+                logger.info(
+                    f'User logged in: {user.username} - {user.email} - {user.firstname} {user.lastname} - {user.role} - {user.section}')
                 return redirect(url_for('dashboard'))
             else:
                 flash("Wrong Password! - Please Try again.")
@@ -288,8 +292,14 @@ def login():
 @login_required
 def logout():
     """This route logs you out of your account"""
-    logout_user()
-    flash("Logout Successful!")
+    try:
+        logout_user()
+        flash("Logout Successful!")
+        logger.info(
+            f'User logged out: {current_user}') # log to logfile the user that logged out.
+    except Exception as e:
+        logger.error(e)
+        raise e
     return redirect(url_for('login'))
 
 

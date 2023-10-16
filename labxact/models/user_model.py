@@ -21,7 +21,7 @@ class Users(db.Model, UserMixin):
     lastname = Column(String(100), nullable=False)
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(50), unique=True, nullable=False)
-    password_hash = Column(String(128), nullable=False)
+    password_hash = Column(String(256), nullable=False)
     role = Column(String(50), nullable=False)
     section = Column(String(50), nullable=False)
     date_added = Column(DateTime, default=datetime.utcnow())

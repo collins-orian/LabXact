@@ -60,7 +60,6 @@ content %} {% for message in get_flashed_messages() %}
 	<h1>Registered Patients</h1>
 	<br />
 	<tr>
-		<th>S/NO.</th>
 		<th>PID</th>
 		<th>FIRSTNAME</th>
 		<th>LASTNAME</th>
@@ -72,7 +71,6 @@ content %} {% for message in get_flashed_messages() %}
 	</tr>
 	{% for patient in all_patients %}
 	<tr>
-		<td>{{patient.id}}</td>
 		<td>{{patient.patient_id}}</td>
 		<td>{{patient.firstname}}</td>
 		<td>{{patient.lastname}}</td>
