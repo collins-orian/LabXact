@@ -31,11 +31,11 @@ class Patients(db.Model):
 
     # sample = relationship('Samples', back_populates="patients")
 
-    def __repr__(self):
-        """This method returns the patients fullname
+    def __str__(self):
+        """This method returns the patients fullname and other details
         as string"""
 
-        return '<Name %r>' % self.firstname + ' ' + self.lastname
+        return f'{self.patient_id} - {self.firstname} {self.lastname} - {self.email}'
 
 
 """

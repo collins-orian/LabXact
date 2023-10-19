@@ -87,12 +87,6 @@ def add_patient():
         try:
             pid = patients.get_patient_by_pid(patient_id)
             if pid is None:
-                # Generate a new PID and try again.
-                # total_patients += 1
-                # num_digits = len(str(total_patients + 1))
-                # patient_id = f"PID-{str(total_patients + 1).zfill(num_digits)}"
-                # pid = patients.get_patient_by_pid(patient_id)
-
                 # Calculate the age of the patient based on the date of birth field in the form.
                 # age = patients.calculate_age(form.dob.data)
 
@@ -124,6 +118,8 @@ def add_patient():
         form.mobile.data = ''
         form.address.data = ''
         flash("Patient Registered Successfully")
+        logger.info(
+            f'Patient {form.patient_id.data} - {form.firstname.data} {form.lastname.data} registered by {current_user.__str__}')
         # Calculate the age based on the date of birth
         return redirect(url_for("add_patient"))
     return render_template('add_patient.html', form=form,
@@ -151,6 +147,8 @@ def modify_patient(id):
                                     request.form.get('email'),
                                     request.form.get('address'))
             flash("Patient Details Updated Successfully!")
+            logger.info(
+                f'Patient {patient_to_update.__str__} details updated by {current_user.__str__}')
             return redirect(url_for("add_patient"))
         except:
             flash("Patient Details Update Failed!")
@@ -172,6 +170,8 @@ def delete_patient(id):
     try:
         patients.delete_patient(patient_to_delete.id)
         flash("Patient Deleted Successfully")
+        logger.info(
+            f'Patient {patient_to_delete.__str__} deleted by {current_user.__str__}')
         return render_template('add_patient.html', form=form,
                                all_patients=all_patients)
 
@@ -191,6 +191,8 @@ def delete_user(id):
     try:
         users.delete_user(user_to_delete.id)
         flash("User Deleted Successfully")
+        logger.info(
+            f'User {user_to_delete.__str__} deleted by {current_user.__str__}')
         return render_template('add_user.html', form=form, our_users=all_users)
     except:
         flash("User Delete Failed!")
@@ -219,6 +221,8 @@ def add_user():
                                   form.role.data,
                                   form.section.data)
                 flash("User Added Successfully")
+                logger.info(
+                    f'User {form.username.data} - {form.firstname.data} {form.lastname.data} added by {current_user}')
                 return redirect(url_for("add_user"))
             except:
                 flash("User Add Failed!")
@@ -254,6 +258,8 @@ def modify_user(id):
                               request.form.get('role'),
                               request.form.get('section'))
             flash("User Details Updated Successfully!")
+            logger.info(
+                f'User {user_to_update.__str__} details updated by {current_user.__str__}')
             return redirect(url_for("add_user"))
         except:
             flash("User Details Update Failed!")
@@ -278,7 +284,7 @@ def login():
                 flash(
                     f'Welcome {user.firstname} {user.lastname}!')
                 logger.info(
-                    f'User logged in: {user.username} - {user.email} - {user.firstname} {user.lastname} - {user.role} - {user.section}')
+                    f'User logged in: {current_user}')
                 return redirect(url_for('dashboard'))
             else:
                 flash("Wrong Password! - Please Try again.")
@@ -293,10 +299,10 @@ def login():
 def logout():
     """This route logs you out of your account"""
     try:
+        logger.info(
+            f'User logging out ---> {current_user} ---> Logout Successful!!!')
         logout_user()
         flash("Logout Successful!")
-        logger.info(
-            f'User logged out: {current_user}') # log to logfile the user that logged out.
     except Exception as e:
         logger.error(e)
         raise e

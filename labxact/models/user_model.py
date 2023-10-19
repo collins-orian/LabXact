@@ -45,7 +45,7 @@ class Users(db.Model, UserMixin):
         to that of the password entered by the user for login"""
         return check_password_hash(self.password_hash, password)
 
-    def __repr__(self):
-        """This method returns the users fullname
+    def __str__(self):
+        """This method returns the users fullname and other details
         as string"""
-        return '<Name %r>' % self.firstname + ' ' + self.lastname
+        return f'{self.username} - {self.firstname} {self.lastname} - {self.email} - {self.role} - {self.section}'

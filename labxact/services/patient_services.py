@@ -30,7 +30,7 @@ class PatientService:
             logger.error(e)
             raise e
         logger.info(
-            f'Patient registered: {patient.firstname} {patient.lastname} - {patient.email} - {patient.patient_id}')
+            f'Patient registered:{patient.__str__}')
         return patient
 
     # def calculate_age(date_of_birth: Optional[date]) -> Optional[int]:
@@ -97,7 +97,7 @@ class PatientService:
             logger.error(e)
             raise e
         logger.info(
-            f'Patient updated: {patient.firstname} {patient.lastname} - {patient.email} - {patient.patient_id}')
+            f'Patient updated: {patient.__str__}')
 
     def delete_patient(self, id: int) -> None:
         """This method deletes patients details from the database"""
@@ -110,4 +110,4 @@ class PatientService:
             logger.error(e)
             raise e
         logger.info(
-            f'Patient deleted: {patient.firstname} {patient.lastname} - {patient.email} - {patient.patient_id}')
+            f'Patient deleted: {patient.__str__}')
