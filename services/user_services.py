@@ -25,7 +25,7 @@ class UserService:
         try:
             db.session.commit()
             logger.info(
-                f'User created: {user.__str__}')
+                f'User created: {user}')
         except Exception as e:
             # Handle the database error here.
             logger.error(e)
@@ -81,7 +81,7 @@ class UserService:
             logger.error(e)
             raise e
         logger.info(
-            f'User updated: {user.__str__}')
+            f'User updated: {user}')
 
     def delete_user(self, id: int) -> None:
         """This method deletes users details from
@@ -95,4 +95,4 @@ class UserService:
             logger.error(e)
             raise e
         logger.info(
-            f'User deleted: {user.__str__}')
+            f'User deleted: {user}')

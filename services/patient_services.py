@@ -25,12 +25,14 @@ class PatientService:
         db.session.add(patient)
         try:
             db.session.commit()
+            logger.info(
+                f'Patient created: {patient}')
         except Exception as e:
             # Handle the database error here.
             logger.error(e)
             raise e
         logger.info(
-            f'Patient registered:{patient.__str__}')
+            f'Patient registered:{patient}')
         return patient
 
     # def calculate_age(date_of_birth: Optional[date]) -> Optional[int]:
@@ -97,7 +99,7 @@ class PatientService:
             logger.error(e)
             raise e
         logger.info(
-            f'Patient updated: {patient.__str__}')
+            f'Patient updated: {patient}')
 
     def delete_patient(self, id: int) -> None:
         """This method deletes patients details from the database"""
@@ -110,4 +112,4 @@ class PatientService:
             logger.error(e)
             raise e
         logger.info(
-            f'Patient deleted: {patient.__str__}')
+            f'Patient deleted: {patient}')

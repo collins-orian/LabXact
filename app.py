@@ -119,7 +119,7 @@ def add_patient():
         form.address.data = ''
         flash("Patient Registered Successfully")
         logger.info(
-            f'Patient {form.patient_id.data} - {form.firstname.data} {form.lastname.data} registered by {current_user.__str__}')
+            f'Patient {form.patient_id.data} - {form.firstname.data} {form.lastname.data} registered by {current_user}')
         # Calculate the age based on the date of birth
         return redirect(url_for("add_patient"))
     return render_template('add_patient.html', form=form,
@@ -148,7 +148,7 @@ def modify_patient(id):
                                     request.form.get('address'))
             flash("Patient Details Updated Successfully!")
             logger.info(
-                f'Patient {patient_to_update.__str__} details updated by {current_user.__str__}')
+                f'Patient {patient_to_update} details updated by {current_user}')
             return redirect(url_for("add_patient"))
         except:
             flash("Patient Details Update Failed!")
@@ -171,7 +171,7 @@ def delete_patient(id):
         patients.delete_patient(patient_to_delete.id)
         flash("Patient Deleted Successfully")
         logger.info(
-            f'Patient {patient_to_delete.__str__} deleted by {current_user.__str__}')
+            f'Patient {patient_to_delete} deleted by {current_user}')
         return render_template('add_patient.html', form=form,
                                all_patients=all_patients)
 
@@ -192,7 +192,7 @@ def delete_user(id):
         users.delete_user(user_to_delete.id)
         flash("User Deleted Successfully")
         logger.info(
-            f'User {user_to_delete.__str__} deleted by {current_user.__str__}')
+            f'User {user_to_delete} deleted by {current_user}')
         return render_template('add_user.html', form=form, our_users=all_users)
     except:
         flash("User Delete Failed!")
@@ -259,7 +259,7 @@ def modify_user(id):
                               request.form.get('section'))
             flash("User Details Updated Successfully!")
             logger.info(
-                f'User {user_to_update.__str__} details updated by {current_user.__str__}')
+                f'User {user_to_update} details updated by {current_user}')
             return redirect(url_for("add_user"))
         except:
             flash("User Details Update Failed!")
