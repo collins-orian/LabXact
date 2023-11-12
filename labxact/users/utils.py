@@ -2,11 +2,11 @@
 
 """contains services related to the user model in the app"""
 
+
 # All the imports
-from typing import Optional, List
-from models.user_model import Users
-from models import db
-from . import logger
+from ..models.user_model import Users
+from ..models import db
+from labxact import logger
 
 
 class UserService:
@@ -38,7 +38,7 @@ class UserService:
         user = Users.query.get_or_404(id)
         return user
 
-    def all_users(self) -> List[Users]:
+    def all_users(self) -> Users:
         """This method gets all users from the
         database by the date registered"""
         users = Users.query.order_by(Users.date_added)
@@ -50,13 +50,13 @@ class UserService:
         count = Users.query.count()
         return count
 
-    def get_user_by_username(self, username: str) -> Optional[Users]:
+    def get_user_by_username(self, username: str) -> Users:
         """This method gets users from the
         database by username"""
         user = Users.query.filter_by(username=username).first()
         return user
 
-    def get_user_by_email(self, email: str) -> Optional[Users]:
+    def get_user_by_email(self, email: str) -> Users:
         """This method gets users from the
         database by email"""
         user = Users.query.filter_by(email=email).first()

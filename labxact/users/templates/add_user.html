@@ -12,7 +12,7 @@ content %} {% for message in get_flashed_messages() %}
 </div>
 
 {% endfor %} {% if current_user.role == 'admin' %}
-<div class="row" style="width: 100%; align-items: center">
+<div class="row" style="display: flex; width: 100%; align-items: center">
 	<div class="col-md-6" style="width: 50%">
 		<h1>Add User</h1>
 		<br />
@@ -46,38 +46,40 @@ content %} {% for message in get_flashed_messages() %}
 	<div class="col-md-6" style="width: 50%">
 		<img
 			src="../static/images/add-user.svg"
-			style="width: 100%; margin: 0 auto"
+			style="width: 80%; margin: 0 auto; display: block"
 		/>
 	</div>
 </div>
-<table class="table table-hover table-bordered table-striped">
-	<h1>User List</h1>
-	<br />
-	<tr>
-		<th>ID</th>
-		<th>FIRST NAME</th>
-		<th>LAST NAME</th>
-		<th>EMAIL</th>
-		<th>USERNAME</th>
-		<th>ROLE</th>
-		<th>SECTION</th>
-		<th>ACTION</th>
-	</tr>
-	{% for users in our_users %}
-	<tr>
-		<td>{{users.id}}</td>
-		<td>{{users.firstname}}</td>
-		<td>{{users.lastname}}</td>
-		<td>{{users.email}}</td>
-		<td>{{users.username}}</td>
-		<td>{{users.role}}</td>
-		<td>{{users.section}}</td>
-		<td>
-			<a href="{{url_for('modify_user', id=users.id)}}">Edit</a>
-		</td>
-	</tr>
-	{% endfor %}
-</table>
+<h1>User List</h1>
+<br />
+<center>
+	<table class="table table-hover table-bordered table-striped">
+		<tr>
+			<th>ID</th>
+			<th>FIRST NAME</th>
+			<th>LAST NAME</th>
+			<th>EMAIL</th>
+			<th>USERNAME</th>
+			<th>ROLE</th>
+			<th>SECTION</th>
+			<th>ACTION</th>
+		</tr>
+		{% for users in our_users %}
+		<tr>
+			<td>{{users.id}}</td>
+			<td>{{users.firstname}}</td>
+			<td>{{users.lastname}}</td>
+			<td>{{users.email}}</td>
+			<td>{{users.username}}</td>
+			<td>{{users.role}}</td>
+			<td>{{users.section}}</td>
+			<td>
+				<a href="{{url_for('users.modify_user', id=users.id)}}">Edit</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+</center>
 
 {% else %}
 

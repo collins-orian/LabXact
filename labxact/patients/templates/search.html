@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% block title%} Search {% endblock %} {% block
+content %} {% for message in get_flashed_messages() %}
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	{{ message }}
+	<button
+		type="button"
+		class="btn-close"
+		data-bs-dismiss="alert"
+		aria-label="Close"
+	></button>
+</div>
+
+{% endfor %}
+<h1>
+	Results for search:
+	<span style="color: #ffc107"><em>{{searched}}</em> </span>
+</h1>
+<br />
+{% if results %}
+<h4>
+	{{results.count() if results.count() >= 1 else 'No'}} result{{'' if
+	results.count() <= 1 else 's'}} found for search
+</h4>
+<div>
+	<div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+		<table class="table table-hover table-bordered table-striped">
+			<tr>
+				<th>PID</th>
+				<th>FIRSTNAME</th>
+				<th>LASTNAME</th>
+				<th>SEX</th>
+				<th>DATE OF BIRTH</th>
+				<th>AGE</th>
+				<th>DATE REGISTERED</th>
+				<th>ACTION</th>
+			</tr>
+			{% for result in results %}
+			<tr>
+				<td>{{result.patient_id}}</td>
+				<td>{{result.firstname}}</td>
+				<td>{{result.lastname}}</td>
+				<td>{{result.gender}}</td>
+				<td>{{result.date_of_birth}}</td>
+				<td>{{result.age}}</td>
+				<td>{{result.date_registered}}</td>
+				<td><a href="">Action</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+{% endif %} {% endblock %}

@@ -14,7 +14,10 @@ content %} {% for message in get_flashed_messages() %}
 {% endfor %}
 <div class="row" style="width: 100%; align-items: center">
 	<div class="col-md-6" style="width: 50%">
-		<img src="../static/images/edit.svg" style="width: 100%; margin: 0 auto" />
+		<img
+			src="../static/images/edit.svg"
+			style="width: 80%; margin: 0 auto; display: block"
+		/>
 	</div>
 	<div class="col-md-6" style="width: 50%">
 		<h1>Update User</h1>
@@ -45,7 +48,7 @@ content %} {% for message in get_flashed_messages() %}
 				<br />
 				{{ form.submit(class='btn btn-warning', style="color: #273469; border:
 				none; background-color: #ffc107; hover-color: blue") }}
-				<a href="{{url_for('delete_user', id=id)}}" class="btn btn-danger"
+				<a href="{{url_for('users.delete_user', id=id)}}" class="btn btn-danger"
 					>Delete</a
 				>
 			</form>

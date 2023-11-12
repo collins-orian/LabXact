@@ -5,12 +5,10 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
+    """This class handles environment variables"""
     SQLALCHEMY_DATABASE_URI: str
     SECRET_KEY: str
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
-
-
-settings = Settings()

@@ -14,7 +14,10 @@ content %} {% for message in get_flashed_messages() %}
 {% endfor %}
 <div class="row" style="width: 100%; align-items: center">
 	<div class="col-md-6" style="width: 50%">
-		<img src="../static/images/edit.svg" style="width: 100%; margin: 0 auto" />
+		<img
+			src="../static/images/edit.svg"
+			style="width: 80%; margin: 0 auto; display: block"
+		/>
 	</div>
 	<div class="col-md-6" style="width: 50%">
 		<h1>Update User</h1>
@@ -25,25 +28,30 @@ content %} {% for message in get_flashed_messages() %}
 				style="color: #273469") }} {{ form.firstname(class='form-control mb-3',
 				value=patient_to_update.firstname) }}
 				{{form.middlename.label(class='form-label', style="color: #273469") }}
-				{{form.middlename(class='form-control mb-3', value=patient_to_update.middlename) }}
+				{{form.middlename(class='form-control mb-3',
+				value=patient_to_update.middlename) }}
 				{{form.lastname.label(class='form-label' , style="color: #273469") }}
-				{{form.lastname(class='form-control mb-3' , value=patient_to_update.lastname) }}
+				{{form.lastname(class='form-control mb-3' ,
+				value=patient_to_update.lastname) }}
 				{{form.dob.label(class='form-label', style="color: #273469") }}
-				{{form.dob(class='form-control mb-3', value=patient_to_update.date_of_birth) }}
+				{{form.dob(class='form-control mb-3',
+				value=patient_to_update.date_of_birth) }}
 				{{form.age.label(class='form-label', style="color: #273469")}} {{
 				form.age(class='form-control mb-3', value=patient_to_update.age) }}
 				{{form.gender.label(class='form-label', style="color: #273469")}} {{
-				form.gender(class='form-control mb-3 form-select', value=patient_to_update.gender) }}
+				form.gender(class='form-control mb-3 form-select',
+				value=patient_to_update.gender) }}
 				{{form.email.label(class='form-label', style="color: #273469")}} {{
 				form.email(class='form-control mb-3', value=patient_to_update.email) }}
 				{{form.mobile.label(class='form-label', style="color: #273469")}} {{
-				form.mobile(class='form-control mb-3', value=patient_to_update.mobile) }}
-				{{form.address.label(class='form-label', style="color: #273469")}} {{
-				form.address(class='form-control mb-3' , value=patient_to_update.address) }}
+				form.mobile(class='form-control mb-3', value=patient_to_update.mobile)
+				}} {{form.address.label(class='form-label', style="color: #273469")}} {{
+				form.address(class='form-control mb-3' ,
+				value=patient_to_update.address) }}
 				<br />
 				{{ form.submit(class='btn btn-warning', style="color: #273469; border:
 				none; background-color: #ffc107; hover-color: blue") }}
-				<a href="{{url_for('delete_patient', id=id)}}" class="btn btn-danger"
+				<a href="{{url_for('patients.delete_patient', id=id)}}" class="btn btn-danger"
 					>Delete</a
 				>
 			</form>

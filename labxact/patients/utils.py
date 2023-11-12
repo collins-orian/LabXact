@@ -3,11 +3,10 @@
 """contains services related to the patient model in the app"""
 
 # All the imports
-from models.patient_model import Patients
-from models import db
-from typing import Optional, List
+from ..models.patient_model import Patients
+from ..models import db
+from .. import logger
 # from datetime import date
-from . import logger
 
 
 class PatientService:
@@ -66,13 +65,13 @@ class PatientService:
         count = Patients.query.count()
         return count
 
-    def all_patients(self) -> List[Patients]:
+    def all_patients(self) -> Patients:
         """This method gets all patients from the
         database by the date registered"""
         patients = Patients.query.order_by(Patients.date_registered)
         return patients
 
-    def get_patient_by_pid(self, pid: str) -> Optional[Patients]:
+    def get_patient_by_pid(self, pid: str) -> Patients:
         """This method gets patients from the
         database by pid"""
         patient = Patients.query.filter_by(patient_id=pid).first()

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""This file contains forms for the app"""
+"""This file contains forms for the users"""
 
 
 # All required import
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, SelectField, DateField, IntegerField
+from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import data_required, equal_to
 
 
@@ -46,49 +46,16 @@ class UserUpdateForm(FlaskForm):
     submit = SubmitField("Update User")
 
 
-# create login form
+# Search form
+class UserSearchForm(FlaskForm):
+    """This class captures search details for users"""
+    searched = StringField("Searched", validators=[data_required()])
+    submit = SubmitField("Search")
+
+
+# Login form
 class LoginForm(FlaskForm):
     """This class captures login details"""
     username = StringField("Username", validators=[data_required()])
     password = PasswordField("Password", validators=[data_required()])
     submit = SubmitField("Login")
-
-
-# patient registration form
-class PatientRegForm(FlaskForm):
-    """This is the patientregform class used for data entry
-    for the patient model data"""
-    patient_id = StringField("Patient ID Number (PID)",
-                             validators=[data_required()])
-    firstname = StringField("First Name", validators=[data_required()])
-    middlename = StringField("Middle Name")
-    lastname = StringField("Last Name", validators=[data_required()])
-    dob = DateField("Date Of Birth", validators=[
-                    data_required()], format='%Y-%m-%d')
-    age = IntegerField("Age", validators=[data_required()])
-    gender = SelectField("Gender", validators=[data_required()], choices=[
-                         ('Male', 'Male'), ('Female', 'Female'), ('Others', 'Others')])
-    email = StringField("Email")
-    mobile = StringField("Mobile", validators=[data_required()])
-    address = StringField("Address", validators=[data_required()])
-    submit = SubmitField("Register")
-
-
-# patient update form
-class PatientUpdateForm(FlaskForm):
-    """This class is used to update existing data
-    with new data in the patient model"""
-    patient_id = StringField("Patient ID Number (PID)",
-                             validators=[data_required()])
-    firstname = StringField("First Name", validators=[data_required()])
-    middlename = StringField("Middle Name")
-    lastname = StringField("Last Name", validators=[data_required()])
-    dob = DateField("Date Of Birth", validators=[
-                    data_required()], format='%Y-%m-%d')
-    age = IntegerField("Age", validators=[data_required()])
-    gender = SelectField("Gender", validators=[data_required()], choices=[
-                         ('Male', 'Male'), ('Female', 'Female'), ('Others', 'Others')])
-    email = StringField("Email")
-    mobile = StringField("Mobile", validators=[data_required()])
-    address = StringField("Address", validators=[data_required()])
-    submit = SubmitField("Update Patient")

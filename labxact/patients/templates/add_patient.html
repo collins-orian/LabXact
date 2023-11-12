@@ -50,40 +50,42 @@ content %} {% for message in get_flashed_messages() %}
 	<div class="col-md-6" style="width: 50%">
 		<img
 			src="../static/images/records.svg"
-			style="width: 100%; margin: 0 auto"
+			style="width: 80%; margin: 0 auto; display: block"
 		/>
 	</div>
 </div>
 
 <br />
-<table class="table table-hover table-bordered table-striped">
-	<h1>Registered Patients</h1>
-	<br />
-	<tr>
-		<th>PID</th>
-		<th>FIRSTNAME</th>
-		<th>LASTNAME</th>
-		<th>SEX</th>
-		<th>DATE OF BIRTH</th>
-		<th>AGE</th>
-		<th>DATE REGISTERED</th>
-		<th>ACTION</th>
-	</tr>
-	{% for patient in all_patients %}
-	<tr>
-		<td>{{patient.patient_id}}</td>
-		<td>{{patient.firstname}}</td>
-		<td>{{patient.lastname}}</td>
-		<td>{{patient.gender}}</td>
-		<td>{{patient.date_of_birth}}</td>
-		<td>{{patient.age}}</td>
-		<td>{{patient.date_registered}}</td>
-		<td>
-			<a href="{{url_for('modify_patient', id=patient.id)}}">Edit</a>
-		</td>
-	</tr>
-	{% endfor %}
-</table>
+<h1>Registered Patients</h1>
+<br />
+<center>
+	<table class="table table-hover table-bordered table-striped">
+		<tr>
+			<th>PID</th>
+			<th>FIRSTNAME</th>
+			<th>LASTNAME</th>
+			<th>SEX</th>
+			<th>DATE OF BIRTH</th>
+			<th>AGE</th>
+			<th>DATE REGISTERED</th>
+			<th>ACTION</th>
+		</tr>
+		{% for patient in all_patients %}
+		<tr>
+			<td>{{patient.patient_id}}</td>
+			<td>{{patient.firstname}}</td>
+			<td>{{patient.lastname}}</td>
+			<td>{{patient.gender}}</td>
+			<td>{{patient.date_of_birth}}</td>
+			<td>{{patient.age}}</td>
+			<td>{{patient.date_registered}}</td>
+			<td>
+				<a href="{{url_for('patients.modify_patient', id=patient.id)}}">Edit</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+</center>
 
 {% else %}
 
