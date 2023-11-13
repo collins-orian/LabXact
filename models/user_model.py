@@ -8,8 +8,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from labxact import login_manager
-from . import db
+from ..labxact.extensions import db
 
 
 # User Model
@@ -50,11 +49,3 @@ class Users(db.Model, UserMixin):
         """This method returns the users fullname and other details
         as string"""
         return f'{self.username} - {self.firstname} {self.lastname} - {self.email} - {self.role} - {self.section}'
-
-
-# This loads the current user based on the user id
-@login_manager.user_loader
-def load_user(user_id):
-    """This method loads current user based on
-    the user id"""
-    return Users.get_user(int(user_id))

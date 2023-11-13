@@ -4,9 +4,9 @@
 
 
 # All the imports
-from ..models.user_model import Users
-from ..models import db
-from labxact import logger
+from ...models.user_model import Users
+from ..extensions import db
+from ..logger import logger
 
 
 class UserService:

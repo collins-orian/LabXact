@@ -3,9 +3,9 @@
 """contains services related to the patient model in the app"""
 
 # All the imports
-from ..models.patient_model import Patients
-from ..models import db
-from .. import logger
+from ...models.patient_model import Patients
+from ..extensions import db
+from ..logger import logger
 # from datetime import date
 
 

@@ -4,11 +4,11 @@
 
 from . import patient
 from flask import request, render_template, redirect, url_for, flash
-from labxact import logger
+from ..logger import logger
 from flask_login import login_required, current_user
 from forms import PatientRegForm, PatientSearchForm, PatientUpdateForm
-from labxact import patients
-from ..models.patient_model import Patients
+from utils import PatientService
+from ...models.patient_model import Patients
 
 
 # patient registration page
@@ -19,18 +19,18 @@ def add_patient():
     registration page"""
 
     pid = None
-    all_patients = patients.all_patients()
+    all_patients = PatientService.all_patients()
 
     form = PatientRegForm()
 
     # generate the PID Number
-    total_patients = patients.patient_count()
+    total_patients = PatientService.patient_count()
     num_digits = len(str(total_patients + 1))
     patient_id = f"PID-{str(total_patients + 1).zfill(num_digits)}"
 
     if form.validate_on_submit():
         try:
-            pid = patients.get_patient_by_pid(patient_id)
+            pid = PatientService.get_patient_by_pid(patient_id)
             if pid is None:
                 # Calculate the age of the patient based on the date of birth field in the form.
                 # age = patients.calculate_age(form.dob.data)
@@ -38,7 +38,7 @@ def add_patient():
                 # Set the value of the age field in the form to the age that we calculated.
                 # form.age.data = age
 
-                patients.create_patient(form.patient_id.data,
+                PatientService.create_patient(form.patient_id.data,
                                         form.firstname.data,
                                         form.middlename.data,
                                         form.lastname.data,
@@ -104,10 +104,10 @@ def search():
 def modify_patient(id):
     """This route takes you to patients update page"""
     form = PatientUpdateForm()
-    patient_to_update = patients.get_patient(id)
+    patient_to_update = PatientService.get_patient(id)
     if request.method == "POST":
         try:
-            patients.update_patient(patient_to_update,
+            PatientService.update_patient(patient_to_update,
                                     request.form.get('firstname'),
                                     request.form.get('middlename'),
                                     request.form.get('lastname'),
@@ -136,10 +136,10 @@ def modify_patient(id):
 def delete_patient(id):
     """This route deletes patient record"""
     form = PatientRegForm()
-    all_patients = patients.all_patients()
-    patient_to_delete = patients.get_patient(id)
+    all_patients = PatientService.all_patients()
+    patient_to_delete = PatientService.get_patient(id)
     try:
-        patients.delete_patient(patient_to_delete.id)
+        PatientService.delete_patient(patient_to_delete.id)
         flash("Patient Deleted Successfully")
         logger.info(
             f'Patient ---> {patient_to_delete} <---> deleted by ---> {current_user}')

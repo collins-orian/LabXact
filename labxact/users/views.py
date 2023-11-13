@@ -3,12 +3,12 @@
 
 from . import user
 from flask import request, render_template, redirect, url_for, flash
-from labxact import logger
+from ..logger import logger
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from forms import UserForm, UserUpdateForm, UserSearchForm, LoginForm
-from labxact import users
-from ..models.user_model import Users
+from utils import UserService
+from ...models.user_model import Users
 
 
 @user.route('/dashboard', methods=['GET', 'POST'])
@@ -23,10 +23,10 @@ def dashboard():
 def delete_user(id):
     """This route deletes user record"""
     form = UserForm()
-    user_to_delete = users.get_user(id)
-    all_users = users.all_users()
+    user_to_delete = UserService.get_user(id)
+    all_users = UserService.all_users()
     try:
-        users.delete_user(user_to_delete.id)
+        UserService.delete_user(user_to_delete.id)
         flash("User Deleted Successfully")
         logger.info(
             f'User ---> {user_to_delete} <---> deleted by ---> {current_user}')
@@ -41,16 +41,16 @@ def delete_user(id):
 @login_required
 def add_user():
     """This route takes you to the add user page"""
-    all_users = users.all_users()
+    all_users = UserService.all_users()
     form = UserForm()
     if form.validate_on_submit():
-        user_email = users.get_user_by_email(form.email.data)
-        user_username = users.get_user_by_username(form.username.data)
+        user_email = UserService.get_user_by_email(form.email.data)
+        user_username = UserService.get_user_by_username(form.username.data)
         if user_email is None and user_username is None:
             try:
                 hashed_pwd = generate_password_hash(
                     form.password.data, "scrypt", salt_length=64)
-                users.create_user(form.firstname.data,
+                UserService.create_user(form.firstname.data,
                                   form.lastname.data,
                                   form.username.data,
                                   form.email.data,
@@ -83,10 +83,10 @@ def add_user():
 def modify_user(id):
     """This route modifies users information"""
     form = UserUpdateForm()
-    user_to_update = users.get_user(id)
+    user_to_update = UserService.get_user(id)
     if request.method == "POST":
         try:
-            users.update_user(user_to_update,
+            UserService.update_user(user_to_update,
                               request.form.get('firstname'),
                               request.form.get('lastname'),
                               request.form.get('username'),
@@ -113,7 +113,7 @@ def login():
     """This route takes you to the login page"""
     form = LoginForm()
     if form.validate_on_submit():
-        user = users.get_user_by_username(form.username.data)
+        user = UserService.get_user_by_username(form.username.data)
         if user:
             # check hash
             if check_password_hash(user.password_hash, form.password.data):

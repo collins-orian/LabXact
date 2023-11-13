@@ -6,7 +6,7 @@
 # All the imports
 from sqlalchemy import Column, Integer, String, Date, Enum, DateTime
 from datetime import datetime
-from . import db
+from labxact.extensions import db
 
 
 # Patient model
